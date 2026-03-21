@@ -99,68 +99,91 @@ def repo_page(repo_name):
 
 @app.route("/command", methods=["POST"])
 def command():
-    cmd = request.json.get("command", "").strip().lower()
+    cmd = request.json.get("command", "").strip()
 
-    path = current_folder["path"]
-
-    # ---- DIR ----
-    if cmd == "dir":
-        if path == "":
-            dirs = list(CUSTOM_DIR.keys())
-        elif path == "github_repos/":
+    # Handle 'dir'
+    if cmd.lower() == "dir":
+        if current_folder["path"] == "github_repos/":
             dirs = get_github_repos()
+        elif current_folder["path"] == "":
+            dirs = list(CUSTOM_DIR.keys())
         else:
-            dirs = list(CUSTOM_DIR.get(path, {}).keys())
-        return jsonify({"output": "\n".join(dirs), "prompt": build_prompt()})
+            folder_name = current_folder["path"]
+            dirs = list(CUSTOM_DIR.get(folder_name, {}).keys())
+        return jsonify({
+            "output": "\n".join(dirs),
+            "prompt": build_prompt()
+            })
 
-    # ---- CD ----
-    if cmd.startswith("cd "):
+    # Handle 'cd'
+    if cmd.lower().startswith("cd "):
         target = cmd[3:].strip()
         if target == "..":
             current_folder["path"] = ""
-            return jsonify({"output": "Back to root", "prompt": build_prompt()})
+            return jsonify({
+                "output": "Back to root",
+                "prompt": build_prompt()
+                })
         elif target in CUSTOM_DIR:
             current_folder["path"] = target
-            return jsonify({"output": f"Entered folder {target}", "prompt": build_prompt()})
-        elif path == "github_repos/":
-            # only allow cd inside github_repos if folder matches a repo
-            if target in get_github_repos():
-                current_folder["path"] = f"github_repos/{target}/"
-                return jsonify({"output": f"Entered GitHub repo {target}", "prompt": build_prompt()})
-        return jsonify({"output": "Folder not found", "prompt": build_prompt()})
-
-    # ---- START ----
-    if cmd.startswith("start "):
-        target = cmd[6:].strip()
-        if path == "github_repos/":
-            github_repos = get_github_repos()
-            if target in github_repos:
-                repo_name = target.replace(".github", "")
-                return jsonify({
-                    "output": f"Opening GitHub repository {repo_name}...",
-                    "redirect": f"/repo/{repo_name}",
-                    "prompt": build_prompt()
-                })
-            else:
-                return jsonify({"output": "Repository not found", "prompt": build_prompt()})
-        elif path:
-            folder_links = CUSTOM_DIR.get(path, {})
-            if target in folder_links:
-                return jsonify({
-                    "output": f"Opening {target}...",
-                    "redirect": folder_links[target],
-                    "prompt": build_prompt()
+            return jsonify({
+                "output": f"Entered folder {target}",
+                "prompt": build_prompt()
                 })
         else:
-            # check root level links
-            for folder, links in CUSTOM_DIR.items():
-                if target in links:
-                    return jsonify({
-                        "output": f"Opening {target}...",
-                        "redirect": links[target],
-                        "prompt": build_prompt()
+            return jsonify({
+                "output": "Folder not found",
+                "prompt": build_prompt()
+                })
+
+    # Handle 'start'
+    
+    if cmd.lower().startswith("start "):
+        target = cmd[6:].strip()
+
+       
+        if current_folder["path"] == "github_repos/":
+            github_repos = get_github_repos()
+            print(target)
+            if target in github_repos:
+                repo_name = target.replace(".github", "")
+                url = f"https://github.com/TheOrangeCow/{repo_name}"
+                print(url)
+                return jsonify({
+                    "output": f"Opening GitHub repository {repo_name}...",
+                    "redirect":f"http://127.0.0.1:5000/repo/{repo_name}",
+                    "prompt": build_prompt()
                     })
-        return jsonify({"output": "Link or repository not found", "prompt": build_prompt()})
+        elif current_folder["path"]:
+            folder_contents = CUSTOM_DIR.get(current_folder["path"], {})
+            if target in folder_contents:
+                webbrowser.open(folder_contents[target])
+                return jsonify({
+                    "output": f"Opening {target}...",
+                    "prompt": build_prompt()
+                    })
+            else:
+                return jsonify({
+                    "output": "Link not found in current folder",
+                    "prompt": build_prompt()
+                    })
 
-    return jsonify({"output": "Command not recognized", "prompt": build_prompt()})
+        for folder, links in CUSTOM_DIR.items():
+            if target in links:
+                webbrowser.open(links[target])
+                return jsonify({
+                    "output": f"Opening {target}...",
+                    "prompt": build_prompt()
+                    })
 
+        
+
+        return jsonify({
+            "output": "Link or repository not found",
+            "prompt": build_prompt()
+            })
+
+    return jsonify({
+        "output": "Command not recognized",
+        "prompt": build_prompt()
+        })
