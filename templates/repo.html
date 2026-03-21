@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>{{ name }}</title>
+
+<style>
+
+body{
+    background:#0d1117;
+    color:#c9d1d9;
+    font-family:Arial;
+}
+
+.container{
+    width:900px;
+    margin:auto;
+}
+
+.header{
+    text-align:center;
+    margin-top:40px;
+}
+
+.stats{
+    display:flex;
+    justify-content:center;
+    gap:25px;
+    margin:20px 0;
+}
+
+.stat{
+    background:#161b22;
+    padding:10px 20px;
+    border-radius:6px;
+}
+
+button{
+    background:#238636;
+    border:none;
+    padding:10px 18px;
+    font-size:16px;
+    border-radius:6px;
+    cursor:pointer;
+    color:white;
+}
+
+.readme{
+    margin-top:40px;
+    padding:30px;
+    background:#161b22;
+    border-radius:8px;
+}
+
+pre{
+    background:#0d1117;
+    padding:15px;
+    overflow-x:auto;
+}
+
+code{
+    background:#0d1117;
+    padding:3px 6px;
+}
+
+.contributors{
+    margin-top:30px;
+    display:flex;
+    gap:10px;
+}
+
+.contributors img{
+    width:40px;
+    border-radius:50%;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+
+<h1>{{ name }}</h1>
+
+<p>{{ description }}</p>
+
+<div class="stats">
+
+<div class="stat">⭐ Stars: {{ stars }}</div>
+<div class="stat">🍴 Forks: {{ forks }}</div>
+<div class="stat">👀 Watchers: {{ watchers }}</div>
+<div class="stat">💻 Language: {{ language }}</div>
+
+</div>
+
+<a href="{{ github }}" target="_blank">
+<button>View on GitHub</button>
+</a>
+
+</div>
+
+<div class="contributors">
+{% for c in contributors %}
+<a href="{{ c.url }}" target="_blank">
+<img src="{{ c.avatar }}">
+</a>
+{% endfor %}
+</div>
+
+<div class="readme">
+{{ readme | safe }}
+</div>
+
+</div>
+
+</body>
+</html>
