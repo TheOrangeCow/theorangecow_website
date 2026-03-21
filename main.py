@@ -1,10 +1,19 @@
+#     .-.;;;;;;'                                                   .-._   .-._.          
+#    (_)  .; .;           .;;.    .-                             .: (_)`-'               
+#         :  ;;-.  .-.   ;;  `;`-'.;.::..-.    . ,';.  ,:.,' .-. ::      .-.  `;     .-  
+#       .:' ;;  ;.;.-'  ;;    :.  .;   ;   :   ;;  ;; :   ;.;.-' ::   _ ;   ;';  ;   ;   
+#     .-:._.;`  ` `:::';;     ;'.;'    `:::'-'';  ;;   `-:' `:::'`: .; )`;;'  `.' `.'    
+#    (_/  `-           `;.__.'                ;    `.-._:'         `--'                  
+
 from flask import Flask, render_template, request, jsonify
 import requests
-import webbrowser
 import markdown
 import base64
 
 app = Flask(__name__)
+
+
+
 
 CUSTOM_DIR = {
     "house-778/": {
@@ -16,10 +25,11 @@ CUSTOM_DIR = {
         "Cheese.github": "https://example.com/projecty"
     },
     "github_repos/": {}
+    
 }
 
-current_folder = {"path": ""}
 
+current_folder = {"path": ""}
 def build_prompt():
     if current_folder["path"]:
         return f"C:\\TheOrangeCow\\{current_folder['path'].rstrip('/')}>"
@@ -31,47 +41,37 @@ def get_github_repos():
         response = requests.get(url)
         response.raise_for_status()
         data = response.json()
-        if not data:
-            return []
         return [repo["name"].lower() + ".github" for repo in data]
-    except:
+    except Exception as e:
+        print("Error fetching GitHub repos:", e)
         return []
-
-def refresh_github_repos():
-    repos = get_github_repos()
-    CUSTOM_DIR["github_repos/"] = {r: f"http://127.0.0.1:5000/repo/{r.replace('.github','')}" for r in repos}
-
-refresh_github_repos()
-
-def list_current_dir():
-    path = current_folder["path"]
-    if path == "":
-        return list(CUSTOM_DIR.keys())
-    if path == "github_repos/":
-        repos = get_github_repos()
-        if not repos:
-            return ["<no repos found>"]
-        CUSTOM_DIR["github_repos/"] = {r: f"http://127.0.0.1:5000/repo/{r.replace('.github','')}" for r in repos}
-        return list(CUSTOM_DIR["github_repos/"].keys())
-    folder_contents = CUSTOM_DIR.get(path, {})
-    return list(folder_contents.keys()) if folder_contents else ["<empty folder>"]
 
 @app.route("/")
 def index():
     return render_template("index.html")
 
+
+
+
+
+
 @app.route("/repo/<repo_name>")
 def repo_page(repo_name):
+
     repo_url = f"https://api.github.com/repos/TheOrangeCow/{repo_name}"
     readme_url = f"https://api.github.com/repos/TheOrangeCow/{repo_name}/readme"
     contrib_url = f"https://api.github.com/repos/TheOrangeCow/{repo_name}/contributors"
+
     repo = requests.get(repo_url).json()
     readme = requests.get(readme_url).json()
     contributors = requests.get(contrib_url).json()
+
     readme_html = ""
+
     if "content" in readme:
         readme_md = base64.b64decode(readme["content"]).decode("utf-8")
         readme_html = markdown.markdown(readme_md, extensions=["fenced_code", "tables"])
+
     contrib_list = []
     for c in contributors[:5]:
         contrib_list.append({
@@ -79,53 +79,111 @@ def repo_page(repo_name):
             "avatar": c["avatar_url"],
             "url": c["html_url"]
         })
+
     return render_template(
         "repo.html",
-        name=repo.get("name", ""),
-        description=repo.get("description", ""),
-        github=repo.get("html_url", ""),
-        stars=repo.get("stargazers_count", 0),
-        forks=repo.get("forks_count", 0),
-        watchers=repo.get("watchers_count", 0),
-        language=repo.get("language", ""),
+        name=repo["name"],
+        description=repo["description"],
+        github=repo["html_url"],
+        stars=repo["stargazers_count"],
+        forks=repo["forks_count"],
+        watchers=repo["watchers_count"],
+        language=repo["language"],
         contributors=contrib_list,
         readme=readme_html
     )
 
+
+
+
 @app.route("/command", methods=["POST"])
 def command():
-    cmd_raw = request.json.get("command", "").strip()
-    cmd = cmd_raw.lower()
-    if cmd == "dir":
-        dirs = list_current_dir()
-        return jsonify({"output": "\n".join(dirs), "prompt": build_prompt()})
-    if cmd.startswith("cd "):
-        target = cmd_raw[3:].strip()
+    cmd = request.json.get("command", "").strip()
+
+    # Handle 'dir'
+    if cmd.lower() == "dir":
+        if current_folder["path"] == "github_repos/":
+            dirs = get_github_repos()
+        elif current_folder["path"] == "":
+            dirs = list(CUSTOM_DIR.keys())
+        else:
+            folder_name = current_folder["path"]
+            dirs = list(CUSTOM_DIR.get(folder_name, {}).keys())
+        return jsonify({
+            "output": "\n".join(dirs),
+            "prompt": build_prompt()
+            })
+
+    # Handle 'cd'
+    if cmd.lower().startswith("cd "):
+        target = cmd[3:].strip()
         if target == "..":
             current_folder["path"] = ""
-            return jsonify({"output": "Back to root", "prompt": build_prompt()})
-        available_dirs = list_current_dir()
-        available_dirs_normalized = [d.rstrip(".github") if d.endswith(".github") else d for d in available_dirs]
-        if target in available_dirs_normalized:
-            if target + ".github" in available_dirs:
-                current_folder["path"] = "github_repos/"
-            else:
-                current_folder["path"] = target if target.endswith("/") else target + "/"
-            return jsonify({"output": f"Entered folder {target}", "prompt": build_prompt()})
-        return jsonify({"output": "Folder not found", "prompt": build_prompt()})
-    if cmd.startswith("start "):
-        target = cmd_raw[6:].strip()
-        path = current_folder["path"]
-        folder_contents = CUSTOM_DIR.get(path, {})
-        if path == "github_repos/" and target.lower() + ".github" in folder_contents:
-            repo_name = target.lower()
             return jsonify({
-                "output": f"Opening GitHub repository {repo_name}...",
-                "redirect": f"http://127.0.0.1:5000/repo/{repo_name}",
+                "output": "Back to root",
                 "prompt": build_prompt()
+                })
+        elif target in CUSTOM_DIR:
+            current_folder["path"] = target
+            return jsonify({
+                "output": f"Entered folder {target}",
+                "prompt": build_prompt()
+                })
+        else:
+            return jsonify({
+                "output": "Folder not found",
+                "prompt": build_prompt()
+                })
+
+    # Handle 'start'
+    
+    if cmd.lower().startswith("start "):
+        target = cmd[6:].strip()
+
+       
+        if current_folder["path"] == "github_repos/":
+            github_repos = get_github_repos()
+            print(target)
+            if target in github_repos:
+                repo_name = target.replace(".github", "")
+                url = f"https://github.com/TheOrangeCow/{repo_name}"
+                print(url)
+                return jsonify({
+                    "output": f"Opening GitHub repository {repo_name}...",
+                    "redirect": f"http://87.106.74.42/repo/{repo_name}"
+                    "prompt": build_prompt()
+                    })
+        elif current_folder["path"]:
+            folder_contents = CUSTOM_DIR.get(current_folder["path"], {})
+            if target in folder_contents:
+                webbrowser.open(folder_contents[target])
+                return jsonify({
+                    "output": f"Opening {target}...",
+                    "prompt": build_prompt()
+                    })
+            else:
+                return jsonify({
+                    "output": "Link not found in current folder",
+                    "prompt": build_prompt()
+                    })
+
+        for folder, links in CUSTOM_DIR.items():
+            if target in links:
+                webbrowser.open(links[target])
+                return jsonify({
+                    "output": f"Opening {target}...",
+                    "prompt": build_prompt()
+                    })
+
+        
+
+        return jsonify({
+            "output": "Link or repository not found",
+            "prompt": build_prompt()
             })
-        if target in folder_contents:
-            webbrowser.open(folder_contents[target])
-            return jsonify({"output": f"Opening {target}...", "prompt": build_prompt()})
-        return jsonify({"output": "Link or repository not found", "prompt": build_prompt()})
-    return jsonify({"output": "Command not recognized", "prompt": build_prompt()})
+
+    return jsonify({
+        "output": "Command not recognized",
+        "prompt": build_prompt()
+        })
+
