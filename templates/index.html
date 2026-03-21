@@ -188,6 +188,9 @@ input.addEventListener("keydown", async e => {
                 currentPath = data.prompt;
                 updatePrompt();
             }
+            if (data.redirect) {
+               window.location.href = data.redirect;
+             }
 
         } catch (err) {
             output.innerHTML += "Error executing command\n";
