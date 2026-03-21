@@ -144,16 +144,15 @@ def command():
        
         if current_folder["path"] == "github_repos/":
             github_repos = get_github_repos()
-            print(target)
             if target in github_repos:
                 repo_name = target.replace(".github", "")
                 url = f"https://github.com/TheOrangeCow/{repo_name}"
-                print(url)
-                webbrowser.open(f"http://127.0.0.1:5000/repo/{repo_name}")
                 return jsonify({
                     "output": f"Opening GitHub repository {repo_name}...",
+                    "redirect": f"/repo/{repo_name}",
                     "prompt": build_prompt()
-                    })
+                })
+                
         elif current_folder["path"]:
             folder_contents = CUSTOM_DIR.get(current_folder["path"], {})
             if target in folder_contents:
