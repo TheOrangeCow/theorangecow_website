@@ -29,7 +29,7 @@ CUSTOM_DIR = {
     
 }
 
-
+global current_folder
 current_folder = {"path": ""}
 def build_prompt():
     if current_folder["path"]:
@@ -42,7 +42,7 @@ def get_github_repos():
         response = requests.get(url)
         response.raise_for_status()
         data = response.json()
-        return [repo["name"] + ".github" for repo in data]
+        return [repo["name"].lower() + ".github" for repo in data]
     except Exception as e:
         print("Error fetching GitHub repos:", e)
         return []
@@ -102,33 +102,40 @@ def command():
     cmd = request.json.get("command", "").strip()
 
     # Handle 'dir'
-    if cmd == "dir":
-        if path == "":
-            dirs = list(CUSTOM_DIR.keys())
-        elif path == "github_repos/":
+    if cmd.lower() == "dir":
+        if current_folder["path"] == "github_repos/":
             dirs = get_github_repos()
+        elif current_folder["path"] == "":
+            dirs = list(CUSTOM_DIR.keys())
         else:
-            dirs = list(CUSTOM_DIR.get(path, {}).keys())
-        return jsonify({"output": "\n".join(dirs), "prompt": build_prompt()})
+            folder_name = current_folder["path"]
+            dirs = list(CUSTOM_DIR.get(folder_name, {}).keys())
+        return jsonify({
+            "output": "\n".join(dirs),
+            "prompt": build_prompt()
+            })
 
     # Handle 'cd'
     if cmd.lower().startswith("cd "):
         target = cmd[3:].strip()
-        
         if target == "..":
-            current_folder["path"] = "" 
-            return jsonify({"output": "Back to root", "prompt": build_prompt()})
-        
-        if target in CUSTOM_DIR:
+            current_folder["path"] = ""
+            return jsonify({
+                "output": "Back to root",
+                "prompt": build_prompt()
+                })
+        elif target in CUSTOM_DIR:
             current_folder["path"] = target
-            return jsonify({"output": f"Entered folder {target}", "prompt": build_prompt()})
-        
-        path = current_folder["path"]
-        if path and target in CUSTOM_DIR.get(path, {}):
-            current_folder["path"] = path + target + "/"
-            return jsonify({"output": f"Entered folder {target}", "prompt": build_prompt()})
-        
-        return jsonify({"output": "Folder not found", "prompt": build_prompt()})
+            return jsonify({
+                "output": f"Entered folder {target}",
+                "prompt": build_prompt()
+                })
+        else:
+            return jsonify({
+                "output": "Folder not found",
+                "prompt": build_prompt()
+                })
+
     # Handle 'start'
     
     if cmd.lower().startswith("start "):
