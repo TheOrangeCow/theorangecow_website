@@ -47,6 +47,12 @@ def list_current_dir():
     path = current_folder["path"]
     if path == "":
         return list(CUSTOM_DIR.keys())
+    if path == "github_repos/":
+        repos = get_github_repos()
+        if not repos:
+            return ["<no repos found>"]
+        CUSTOM_DIR["github_repos/"] = {r: f"http://127.0.0.1:5000/repo/{r.replace('.github','')}" for r in repos}
+        return list(CUSTOM_DIR["github_repos/"].keys())
     folder_contents = CUSTOM_DIR.get(path, {})
     return list(folder_contents.keys()) if folder_contents else ["<empty folder>"]
 
