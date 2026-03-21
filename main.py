@@ -42,7 +42,7 @@ def get_github_repos():
         response = requests.get(url)
         response.raise_for_status()
         data = response.json()
-        return [repo["name"].lower() + ".github" for repo in data]
+        return [repo["name"] + ".github" for repo in data]
     except Exception as e:
         print("Error fetching GitHub repos:", e)
         return []
@@ -102,22 +102,14 @@ def command():
     cmd = request.json.get("command", "").strip()
 
     # Handle 'dir'
-    if cmd.lower() == "dir":
-        path = current_folder["path"]
-        
+    if cmd == "dir":
         if path == "":
             dirs = list(CUSTOM_DIR.keys())
         elif path == "github_repos/":
             dirs = get_github_repos()
-        elif path in CUSTOM_DIR:
-            dirs = list(CUSTOM_DIR[path].keys())
         else:
             dirs = list(CUSTOM_DIR.get(path, {}).keys())
-        
-        return jsonify({
-            "output": "\n".join(dirs),
-            "prompt": build_prompt()
-        })
+        return jsonify({"output": "\n".join(dirs), "prompt": build_prompt()})
 
     # Handle 'cd'
     if cmd.lower().startswith("cd "):
