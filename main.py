@@ -109,8 +109,8 @@ def command():
             github_repos = get_github_repos()
             if target in github_repos:
                 repo_name = target.replace(".github", "")
-                url = f"https://github.com/TheOrangeCow/{repo_name}"
-                return jsonify({"output": f"Opening GitHub repository {repo_name}...", "prompt": build_prompt(), "url": url})
+                url = f"http://87.106.74.42/repo/{repo_name}"
+                return jsonify({"output": f"Opening GitHub repository {repo_name}...", "prompt": build_prompt(), "redirect": url})
         if target in folder_contents:
             return jsonify({"output": f"Opening {target}...", "prompt": build_prompt(), "url": folder_contents[target]})
         return jsonify({"output": "Link or repository not found", "prompt": build_prompt()})
