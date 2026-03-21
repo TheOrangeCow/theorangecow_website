@@ -32,19 +32,21 @@ def get_github_repos():
         response.raise_for_status()
         data = response.json()
         if not data:
-            return ["<no repos found>"]
+            return []
         return [repo["name"].lower() + ".github" for repo in data]
-    except Exception as e:
-        print("Error fetching GitHub repos:", e)
-        return ["<error fetching repos>"]
+    except:
+        return []
+
+def refresh_github_repos():
+    repos = get_github_repos()
+    CUSTOM_DIR["github_repos/"] = {r: f"http://127.0.0.1:5000/repo/{r.replace('.github','')}" for r in repos}
+
+refresh_github_repos()
 
 def list_current_dir():
     path = current_folder["path"]
     if path == "":
         return list(CUSTOM_DIR.keys())
-    if path == "github_repos/":
-        repos = get_github_repos()
-        return repos if repos else ["<no repos found>"]
     folder_contents = CUSTOM_DIR.get(path, {})
     return list(folder_contents.keys()) if folder_contents else ["<empty folder>"]
 
@@ -108,19 +110,16 @@ def command():
     if cmd.startswith("start "):
         target = cmd_raw[6:].strip()
         path = current_folder["path"]
-        if path == "github_repos/":
-            github_repos = get_github_repos()
-            if target.lower() + ".github" in github_repos:
-                repo_name = target.lower()
-                return jsonify({
-                    "output": f"Opening GitHub repository {repo_name}...",
-                    "redirect": f"http://127.0.0.1:5000/repo/{repo_name}",
-                    "prompt": build_prompt()
-                })
         folder_contents = CUSTOM_DIR.get(path, {})
+        if path == "github_repos/" and target.lower() + ".github" in folder_contents:
+            repo_name = target.lower()
+            return jsonify({
+                "output": f"Opening GitHub repository {repo_name}...",
+                "redirect": f"http://127.0.0.1:5000/repo/{repo_name}",
+                "prompt": build_prompt()
+            })
         if target in folder_contents:
             webbrowser.open(folder_contents[target])
             return jsonify({"output": f"Opening {target}...", "prompt": build_prompt()})
         return jsonify({"output": "Link or repository not found", "prompt": build_prompt()})
     return jsonify({"output": "Command not recognized", "prompt": build_prompt()})
-
