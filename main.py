@@ -150,7 +150,7 @@ def command():
                 print(url)
                 return jsonify({
                     "output": f"Opening GitHub repository {repo_name}...",
-                    "redirect": f"http://87.106.74.42/repo/{repo_name}"
+                    "redirect": f"http://87.106.74.42/repo/{repo_name}",
                     "prompt": build_prompt()
                     })
         elif current_folder["path"]:
