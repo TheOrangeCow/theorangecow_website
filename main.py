@@ -106,6 +106,7 @@ def command():
             github_repos = get_github_repos()
             if github_repos:
                 dirs = github_repos
+                print("hi")
             else:
                 dirs = ["<Could not fetch GitHub repos>"]
         elif current_folder["path"] == "":
