@@ -103,7 +103,11 @@ def command():
     # Handle 'dir'
     if cmd.lower() == "dir":
         if current_folder["path"] == "github_repos/":
-            dirs = get_github_repos()
+            github_repos = get_github_repos()
+            if github_repos:
+                dirs = github_repos
+            else:
+                dirs = ["<Could not fetch GitHub repos>"]
         elif current_folder["path"] == "":
             dirs = list(CUSTOM_DIR.keys())
         else:
