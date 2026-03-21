@@ -103,39 +103,40 @@ def command():
 
     # Handle 'dir'
     if cmd.lower() == "dir":
-        if current_folder["path"] == "github_repos/":
-            dirs = get_github_repos()
-        elif current_folder["path"] == "":
+        path = current_folder["path"]
+        
+        if path == "":
             dirs = list(CUSTOM_DIR.keys())
+        elif path == "github_repos/":
+            dirs = get_github_repos()
+        elif path in CUSTOM_DIR:
+            dirs = list(CUSTOM_DIR[path].keys())
         else:
-            folder_name = current_folder["path"]
-            dirs = list(CUSTOM_DIR.get(folder_name, {}).keys())
+            dirs = list(CUSTOM_DIR.get(path, {}).keys())
+        
         return jsonify({
             "output": "\n".join(dirs),
             "prompt": build_prompt()
-            })
+        })
 
     # Handle 'cd'
     if cmd.lower().startswith("cd "):
         target = cmd[3:].strip()
+        
         if target == "..":
-            current_folder["path"] = ""
-            return jsonify({
-                "output": "Back to root",
-                "prompt": build_prompt()
-                })
-        elif target in CUSTOM_DIR:
+            current_folder["path"] = "" 
+            return jsonify({"output": "Back to root", "prompt": build_prompt()})
+        
+        if target in CUSTOM_DIR:
             current_folder["path"] = target
-            return jsonify({
-                "output": f"Entered folder {target}",
-                "prompt": build_prompt()
-                })
-        else:
-            return jsonify({
-                "output": "Folder not found",
-                "prompt": build_prompt()
-                })
-
+            return jsonify({"output": f"Entered folder {target}", "prompt": build_prompt()})
+        
+        path = current_folder["path"]
+        if path and target in CUSTOM_DIR.get(path, {}):
+            current_folder["path"] = path + target + "/"
+            return jsonify({"output": f"Entered folder {target}", "prompt": build_prompt()})
+        
+        return jsonify({"output": "Folder not found", "prompt": build_prompt()})
     # Handle 'start'
     
     if cmd.lower().startswith("start "):
@@ -188,5 +189,3 @@ def command():
         "prompt": build_prompt()
         })
 
-if __name__ == "__main__":
-    app.run(debug=True)
