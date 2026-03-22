@@ -63,9 +63,8 @@ switchEl.addEventListener("change", () => {
 });
 
 function checkMobileMode() {
-    const mobileThreshold = 768;
+    const mobileThreshold = 2752;
     if (window.innerWidth <= mobileThreshold) {
-        // switch to mobile mode
         terminal.style.display = "none";
         buttonUI.style.display = "block";
         switchEl.checked = true;
