@@ -201,7 +201,8 @@ async function fileload(){
                 fileContainer.innerHTML = data.output;
             }
             if (data.prompt) {
-                fileContainerPromt.textContent = "Location: " + data.prompt + "<button onclick = 'back()'>Back</button>";
+                fileContainerPromt.textContent = "Location: " + data.prompt 
+                fileContainerPromt.innerHTML += "<button onclick = 'back()'>Back</button>";
             }
             if (data.redirect) {
                 window.location.href = data.redirect;
