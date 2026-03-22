@@ -9,7 +9,7 @@ body {
 
 #title {
     font-family: 'Press Start 2P', monospace;
-    font-size: clamp(40px, 10vw, 96px);
+    font-size: clamp(0px, 9vw, 95px);
     color: orange;
     text-align: center;
     position: relative;
