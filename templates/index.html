@@ -178,7 +178,7 @@ async function fileload(){
         const res = await fetch("/command", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify("load")
+            body: JSON.stringify({ command: "load" })
         });
         const data = await res.json();
         if (data.output){
@@ -244,7 +244,7 @@ async function gotoplace(place){
         const res = await fetch("/command", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify("start " + place)
+            body: JSON.stringify({ command: "start " + place }) 
         });
         const data = await res.json();
         if (data.redirect) {
@@ -254,7 +254,7 @@ async function gotoplace(place){
         const res = await fetch("/command", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify("cd " + place)
+            body: JSON.stringify({ command: "cd " + place })
         });
         fileload()
     }
