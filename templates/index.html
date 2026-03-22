@@ -1,8 +1,18 @@
+<!--
+
+     .-.;;;;;;'                                                   .-._   .-._.          
+    (_)  .; .;           .;;.    .-                             .: (_)`-'               
+         :  ;;-.  .-.   ;;  `;`-'.;.::..-.    . ,';.  ,:.,' .-. ::      .-.  `;     .-  
+       .:' ;;  ;.;.-'  ;;    :.  .;   ;   :   ;;  ;; :   ;.;.-' ::   _ ;   ;';  ;   ;   
+     .-:._.;`  ` `:::';;     ;'.;'    `:::'-'';  ;;   `-:' `:::'`: .; )`;;'  `.' `.'    
+    (_/  `-           `;.__.'                ;    `.-._:'         `--'                  
+
+    -->
 <!DOCTYPE html>
 <html>
 <head>
 <title>TheOrangeCow</title>
-
+ 
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
 <style>
@@ -11,225 +21,344 @@ body {
     background: black;
     color: #00ff00;
     font-family: monospace;
+    overflow-x: hidden;
+    overflow-y: visible;
 }
 
-.switch {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    z-index: 100;
-}
-
-.switch input {
-    display: none;
-}
-
-.slider {
-    width: 50px;
-    height: 25px;
-    background: #222;
-    border-radius: 25px;
+#title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 96px;
+    color: orange;
+    text-align: center;
     position: relative;
-    cursor: pointer;
+    top: -500px;
+    animation: drop 0.6s linear forwards;
+    text-shadow:
+        8px 8px #b35c00,
+        16px 16px #803f00;
 }
 
-.slider::before {
-    content: "";
+@keyframes drop {
+    to { top: 0; }
+}
+
+.dust {
     position: absolute;
-    width: 20px;
-    height: 20px;
-    background: #00ff00;
-    border-radius: 50%;
-    top: 2.5px;
-    left: 3px;
-    transition: 0.3s;
+    width: 12px;
+    height: 12px;
+    background: #999;
+    z-index: 5;
+    animation: dust-fall 2.5s ease-out forwards;
 }
 
-input:checked + .slider::before {
-    transform: translateX(24px);
+@keyframes dust-fall {
+    from { transform: translate(0, 0); opacity: 1; }
+    to { transform: translate(var(--x), var(--y)); opacity: 0; }
 }
 
 #terminal {
-    width: 90%;
-    margin: 100px auto;
-    padding: 15px;
+    width: 80%;
+    margin: 120px auto;
+    padding: 20px;
     border: 2px solid #00ff00;
+    min-height: 220px;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    position: relative;
 }
 
-#buttonUI {
-    display: none;
-    padding: 80px 10px;
+#terminal.show {
+    opacity: 1;
 }
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+#output {
+    white-space: pre-line;
 }
 
-.grid button {
-    padding: 15px;
-    background: black;
-    border: 1px solid #00ff00;
-    color: #00ff00;
-    font-size: 12px;
+#cmd {
+    position: absolute;
+    opacity: 0;
+}
+
+#cursor {
+    animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
 }
 
 
-@media (max-width: 700px) {
-    #terminal {
-        display: none;
-    }
-    #buttonUI {
-        display: block;
-    }
+.ball {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: red;
+    border-radius: 50%;
+    pointer-events: auto;
+    z-index: 10;
 }
 </style>
 </head>
 
 <body>
-
-
-<label class="switch">
-    <input type="checkbox" id="modeSwitch">
-    <div class="slider"></div>
-</label>
-
+<br><br>
+<div id="title">TheOrangeCow</div>
 
 <div id="terminal">
     <div id="output"></div>
     <div>
         <span id="prompt"></span>
-        <span id="typed"></span><span>█</span>
+        <span id="typed"></span><span id="cursor">█</span>
     </div>
-    <input id="cmd">
-</div>
-
-
-<div id="buttonUI">
-    <div class="grid">
-        <button onclick="sendCmd('dir')">DIR</button>
-        <button onclick="sendCmd('cd ..')">BACK</button>
-        <button onclick="sendCmd('protect')">PROTECT</button>
-        <button onclick="sendCmd('clear')">CLEAR</button>
-        <button onclick="sendCmd('whoami')">WHOAMI</button>
-        <button onclick="sendCmd('help')">HELP</button>
-    </div>
+    <input id="cmd" autocomplete="off">
 </div>
 
 <script>
+const title = document.getElementById("title");
 const terminal = document.getElementById("terminal");
-const buttonUI = document.getElementById("buttonUI");
 const input = document.getElementById("cmd");
 const typed = document.getElementById("typed");
 const output = document.getElementById("output");
-const promptSpan = document.getElementById("prompt");
-const switchEl = document.getElementById("modeSwitch");
+
+function spawnDust() {
+    const rect = title.getBoundingClientRect();
+    const startY = rect.bottom - 4;
+
+    for (let i = 0; i < 120; i++) {
+        setTimeout(() => {
+            const dust = document.createElement("div");
+            dust.className = "dust";
+            dust.style.left = rect.left + Math.random() * rect.width + "px";
+            dust.style.top = startY + "px";
+            const x = (Math.random() - 0.5) * 40;
+            const y = 180 + Math.random() * 80;
+            dust.style.setProperty("--x", x + "px");
+            dust.style.setProperty("--y", y + "px");
+            document.body.appendChild(dust);
+            setTimeout(() => dust.remove(), 2600);
+        }, Math.random() * 350);
+    }
+}
+
+title.addEventListener("animationend", () => {
+    spawnDust();
+    terminal.classList.add("show");
+    input.focus();
+    startBalls();
+});
 
 let currentPath = "C:\\TheOrangeCow>";
+const promptSpan = document.getElementById("prompt");
 
 function updatePrompt() {
     promptSpan.textContent = currentPath + " ";
 }
+
 updatePrompt();
 
-switchEl.addEventListener("change", () => {
-    if (switchEl.checked) {
-        terminal.style.display = "none";
-        buttonUI.style.display = "block";
-    } else {
-        terminal.style.display = "block";
-        buttonUI.style.display = "none";
-    }
-});
-
-function checkScreen() {
-    if (window.innerWidth < 700) {
-        switchEl.checked = true;
-        terminal.style.display = "none";
-        buttonUI.style.display = "block";
-    }
-}
-window.addEventListener("load", checkScreen);
 
 document.body.addEventListener("click", () => input.focus());
 
-input.addEventListener("input", () => {
-    typed.textContent = input.value;
-});
+input.addEventListener("input", () => { typed.textContent = input.value; });
 
 input.addEventListener("keydown", async e => {
     if (e.key === "Enter") {
-        runCommand(input.value);
+        const cmd = input.value.trim().toLowerCase();
+
+
+        if (cmd === "protect") {
+            toggleProtect();
+            output.innerHTML += `${currentPath} ${cmd}\n`;
+            input.value = "";
+            typed.textContent = "";
+            return; 
+        }
+
+        output.innerHTML += `${currentPath} ${cmd}\n`;
+        try {
+            const res = await fetch("/command", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ command: cmd })
+            });
+            const data = await res.json();
+            if (data.output) output.innerHTML += data.output + "\n";
+            if (data.prompt) {
+                currentPath = data.prompt;
+                updatePrompt();
+            }
+            if (data.redirect) {
+               window.location.href = data.redirect;
+             }
+
+        } catch (err) {
+            output.innerHTML += "Error executing command\n";
+        }
+
+
+        input.value = "";
+        typed.textContent = "";
     }
 });
 
-function sendCmd(cmd) {
-    runCommand(cmd);
-}
 
-async function runCommand(cmd) {
-    cmd = cmd.trim().toLowerCase();
-    output.innerHTML += currentPath + " " + cmd + "\n";
+let hits = 0;
+let balls = [];
+let protectActive = false;
+let shield = null;
 
-    try {
-        const res = await fetch("/command", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ command: cmd })
-        });
-
-        const data = await res.json();
-
-        if (data.output) output.innerHTML += data.output + "\n";
-        if (data.prompt) {
-            currentPath = data.prompt;
-            updatePrompt();
-        }
-        if (data.redirect) {
-            window.location.href = data.redirect;
-        }
-
-    } catch {
-        output.innerHTML += "Error\n";
-    }
-
-    input.value = "";
-    typed.textContent = "";
-}
-
-function isMobile() {
-    return window.innerWidth < 700;
-}
-
-if (!isMobile()) {
+function startBalls() {
     setInterval(() => {
-        const ball = document.createElement("div");
-        ball.style.position = "absolute";
-        ball.style.width = "20px";
-        ball.style.height = "20px";
-        ball.style.background = "red";
-        ball.style.borderRadius = "50%";
-        ball.style.left = Math.random() * window.innerWidth + "px";
-        ball.style.top = "-20px";
-        document.body.appendChild(ball);
-
-        let speed = Math.random() + 1;
-
-        function fall() {
-            let top = parseFloat(ball.style.top);
-            ball.style.top = top + speed + "px";
-
-            if (top > window.innerHeight) {
-                ball.remove();
-                return;
-            }
-
-            requestAnimationFrame(fall);
-        }
-        fall();
+        createBall();
     }, 800);
 }
+
+let mouse = { x: 0, y: 0 };
+document.addEventListener("mousemove", e => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+});
+
+function createBall() {
+    const ball = document.createElement("div");
+    ball.className = "ball";
+    const x = Math.random() * (window.innerWidth - 20);
+    ball.style.left = x + "px";
+    ball.style.top = "-20px";
+    ball.style.zIndex = -1;
+    document.body.appendChild(ball);
+
+    balls.push(ball); 
+
+    const speed = Math.random() + 1; 
+
+    function moveBall() {
+        if (!ball.parentElement) return; 
+
+        const top = parseFloat(ball.style.top);
+        ball.style.top = top + speed + "px";
+
+        const ballRect = ball.getBoundingClientRect();
+        const termRect = terminal.getBoundingClientRect();
+
+        if (ballRect.top > termRect.bottom + 50) {
+            ball.remove();
+            balls = balls.filter(b => b !== ball);
+            return;
+        }
+
+        if (
+            mouse.x >= ballRect.left &&
+            mouse.x <= ballRect.right &&
+            mouse.y >= ballRect.top &&
+            mouse.y <= ballRect.bottom
+        ) {
+            explodeBall(ball);
+            balls = balls.filter(b => b !== ball);
+            return;
+        }
+
+        if (protectActive && shield) {
+            const shieldRect = shield.getBoundingClientRect();
+            if (
+                ballRect.bottom >= shieldRect.top &&
+                ballRect.top <= shieldRect.bottom &&
+                ballRect.right >= shieldRect.left &&
+                ballRect.left <= shieldRect.right
+            ) {
+                explodeBall(ball);
+                balls = balls.filter(b => b !== ball);
+                return;
+            }
+        }
+
+        if (
+            ballRect.bottom >= termRect.top &&
+            ballRect.top <= termRect.bottom &&
+            ballRect.right >= termRect.left &&
+            ballRect.left <= termRect.right
+        ) {
+            hits++;
+            shakeTerminal();
+            ball.remove();
+            balls = balls.filter(b => b !== ball);
+            if (hits >= 100) {
+                terminal.innerHTML = `<h1 style='color:red; font-family: "Press Start 2P", monospace; text-align:center;'>TERMINAL DESTROYED!</h1>`;
+            }
+            return;
+        }
+
+        requestAnimationFrame(moveBall);
+    }
+
+    requestAnimationFrame(moveBall);
+}
+
+function explodeBall(ball) {
+    const rect = ball.getBoundingClientRect();
+    const explosion = document.createElement("div");
+    explosion.style.position = "absolute";
+    explosion.style.left = rect.left + "px";
+    explosion.style.top = rect.top + "px";
+    explosion.style.width = "30px";
+    explosion.style.height = "30px";
+    explosion.style.background = "orange";
+    explosion.style.borderRadius = "50%";
+    explosion.style.opacity = "1";
+    explosion.style.transition = "opacity 0.3s, transform 0.3s";
+    document.body.appendChild(explosion);
+
+    setTimeout(() => {
+        explosion.style.opacity = "0";
+        explosion.style.transform = "scale(2)";
+    }, 10);
+
+    setTimeout(() => explosion.remove(), 310);
+
+    ball.remove();
+}
+
+function shakeTerminal() {
+    terminal.style.transition = "transform 0.05s";
+    terminal.style.transform = "translateX(-10px)";
+    setTimeout(() => { terminal.style.transform = "translateX(10px)"; }, 50);
+    setTimeout(() => { terminal.style.transform = "translateX(-5px)"; }, 100);
+    setTimeout(() => { terminal.style.transform = "translateX(5px)"; }, 150);
+    setTimeout(() => { terminal.style.transform = "translateX(0px)"; }, 200);
+}
+
+
+function toggleProtect() {
+    protectActive = !protectActive;
+    if (protectActive) {
+ 
+        shield = document.createElement("div");
+        shield.style.position = "absolute";
+        const termRect = terminal.getBoundingClientRect();
+        shield.style.left = termRect.left + "px";
+        shield.style.top = termRect.top + "px";
+        shield.style.width = termRect.width + "px";
+        shield.style.height = "5px";
+        shield.style.background = "#0f0";
+        shield.style.opacity = "0.6";
+        shield.style.zIndex = 20;
+        document.body.appendChild(shield);
+    } else {
+
+        if (shield) shield.remove();
+        shield = null;
+    }
+}
+
+input.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+        const cmd = input.value.trim().toLowerCase();
+        if (cmd === "protect") {
+            toggleProtect();
+        }
+    }
+});
 </script>
 
 </body>
