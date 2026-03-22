@@ -98,12 +98,52 @@ body {
     pointer-events: auto;
     z-index: 10;
 }
+
+.switch {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 100;
+}
+
+.switch input {
+    display: none;
+}
+
+.slider {
+    width: 50px;
+    height: 25px;
+    background: #222;
+    border-radius: 25px;
+    position: relative;
+    cursor: pointer;
+}
+
+.slider::before {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: #00ff00;
+    border-radius: 50%;
+    top: 2.5px;
+    left: 3px;
+    transition: 0.3s;
+}
+
+input:checked + .slider::before {
+    transform: translateX(24px);
+}
 </style>
 </head>
 
 <body>
 <br><br>
 <div id="title">TheOrangeCow</div>
+<label class="switch">
+    <input type="checkbox" id="modeSwitch">
+    <div class="slider"></div>
+</label>
 
 <div id="terminal">
     <div id="output"></div>
@@ -113,6 +153,12 @@ body {
     </div>
     <input id="cmd" autocomplete="off">
 </div>
+<div id="buttonUI">
+    <h3>Browse</h3>
+    <div id="file">
+
+    </div>
+</div>
 
 <script>
 const title = document.getElementById("title");
@@ -120,26 +166,102 @@ const terminal = document.getElementById("terminal");
 const input = document.getElementById("cmd");
 const typed = document.getElementById("typed");
 const output = document.getElementById("output");
+const switchEl = document.getElementById("modeSwitch");
+const buttonUI = document.getElementById("buttonUI");
+const fileContainer = document.getElementById("file");
+const fileContainerPromt = document.getElementById("filepromt");
+let mode = "terminal"
+
+switchEl.addEventListener("change", () => {
+    if (switchEl.checked) {
+        terminal.style.display = "none";
+        buttonUI.style.display = "block";
+        mode = "mobile"
+        renderFiles(currentFolder);
+    } else {
+        terminal.style.display = "block";
+        buttonUI.style.display = "none";
+        mode = "terminal"
+    }
+});
+
+
+
+
+
+
+
 
 function spawnDust() {
-    const rect = title.getBoundingClientRect();
-    const startY = rect.bottom - 4;
+    if (mode === "terminal"){
+        const rect = title.getBoundingClientRect();
+        const startY = rect.bottom - 4;
 
-    for (let i = 0; i < 120; i++) {
-        setTimeout(() => {
-            const dust = document.createElement("div");
-            dust.className = "dust";
-            dust.style.left = rect.left + Math.random() * rect.width + "px";
-            dust.style.top = startY + "px";
-            const x = (Math.random() - 0.5) * 40;
-            const y = 180 + Math.random() * 80;
-            dust.style.setProperty("--x", x + "px");
-            dust.style.setProperty("--y", y + "px");
-            document.body.appendChild(dust);
-            setTimeout(() => dust.remove(), 2600);
-        }, Math.random() * 350);
+        for (let i = 0; i < 120; i++) {
+            setTimeout(() => {
+                const dust = document.createElement("div");
+                dust.className = "dust";
+                dust.style.left = rect.left + Math.random() * rect.width + "px";
+                dust.style.top = startY + "px";
+                const x = (Math.random() - 0.5) * 40;
+                const y = 180 + Math.random() * 80;
+                dust.style.setProperty("--x", x + "px");
+                dust.style.setProperty("--y", y + "px");
+                document.body.appendChild(dust);
+                setTimeout(() => dust.remove(), 2600);
+            }, Math.random() * 350);
+        }
     }
 }
+
+async function fileload(){
+    try {
+        const res = await fetch("/command", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify("load")
+        });
+        const data = await res.json();
+        if (data.output){
+            fileContainer.innerHTML = data.output;
+        }
+        if (data.prompt) {
+            fileContainerPromt.textContent = data.prompt;
+        }
+        if (data.redirect) {
+            window.location.href = data.redirect;
+        }
+    }catch (err) {
+        output.innerHTML += "Error executing command\n";
+    }
+}
+
+async function gotoplace(place){
+    if (place.endsWith(".github")){
+        const res = await fetch("/command", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify("start " + place)
+        });
+        const data = await res.json();
+        if (data.redirect) {
+            window.location.href = data.redirect;
+        }
+    }else{
+        const res = await fetch("/command", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify("cd " + place)
+        });
+        fileload()
+    }
+}
+
+
+
+
+
+
 
 title.addEventListener("animationend", () => {
     spawnDust();
@@ -157,208 +279,221 @@ function updatePrompt() {
 
 updatePrompt();
 
+if (mode === "terminal"){
+    document.body.addEventListener("click", () => input.focus());
 
-document.body.addEventListener("click", () => input.focus());
+    input.addEventListener("input", () => { typed.textContent = input.value; });
 
-input.addEventListener("input", () => { typed.textContent = input.value; });
-
-input.addEventListener("keydown", async e => {
-    if (e.key === "Enter") {
-        const cmd = input.value.trim().toLowerCase();
+    input.addEventListener("keydown", async e => {
+        if (e.key === "Enter") {
+            const cmd = input.value.trim().toLowerCase();
 
 
-        if (cmd === "protect") {
-            toggleProtect();
+            if (cmd === "protect") {
+                toggleProtect();
+                output.innerHTML += `${currentPath} ${cmd}\n`;
+                input.value = "";
+                typed.textContent = "";
+                return; 
+            }
+
             output.innerHTML += `${currentPath} ${cmd}\n`;
+            try {
+                const res = await fetch("/command", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({ command: cmd })
+                });
+                const data = await res.json();
+                if (data.output) output.innerHTML += data.output + "\n";
+                if (data.prompt) {
+                    currentPath = data.prompt;
+                    updatePrompt();
+                }
+                if (data.redirect) {
+                window.location.href = data.redirect;
+                }
+
+            } catch (err) {
+                output.innerHTML += "Error executing command\n";
+            }
+
+
             input.value = "";
             typed.textContent = "";
-            return; 
         }
+    });
+}else{
 
-        output.innerHTML += `${currentPath} ${cmd}\n`;
-        try {
-            const res = await fetch("/command", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({ command: cmd })
-            });
-            const data = await res.json();
-            if (data.output) output.innerHTML += data.output + "\n";
-            if (data.prompt) {
-                currentPath = data.prompt;
-                updatePrompt();
-            }
-            if (data.redirect) {
-               window.location.href = data.redirect;
-             }
-
-        } catch (err) {
-            output.innerHTML += "Error executing command\n";
-        }
-
-
-        input.value = "";
-        typed.textContent = "";
-    }
-});
-
-
-let hits = 0;
-let balls = [];
-let protectActive = false;
-let shield = null;
-
-function startBalls() {
-    setInterval(() => {
-        createBall();
-    }, 800);
 }
 
-let mouse = { x: 0, y: 0 };
-document.addEventListener("mousemove", e => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-});
+if (mode === "terminal"){
+    let hits = 0;
+    let balls = [];
+    let protectActive = false;
+    let shield = null;
+
+    function startBalls() {
+        setInterval(() => {
+            createBall();
+        }, 800);
+    }
+
+    let mouse = { x: 0, y: 0 };
+    document.addEventListener("mousemove", e => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+    });
+}
 
 function createBall() {
-    const ball = document.createElement("div");
-    ball.className = "ball";
-    const x = Math.random() * (window.innerWidth - 20);
-    ball.style.left = x + "px";
-    ball.style.top = "-20px";
-    ball.style.zIndex = -1;
-    document.body.appendChild(ball);
+    if (mode === "terminal"){
+        const ball = document.createElement("div");
+        ball.className = "ball";
+        const x = Math.random() * (window.innerWidth - 20);
+        ball.style.left = x + "px";
+        ball.style.top = "-20px";
+        ball.style.zIndex = -1;
+        document.body.appendChild(ball);
 
-    balls.push(ball); 
+        balls.push(ball); 
 
-    const speed = Math.random() + 1; 
+        const speed = Math.random() + 1; 
 
-    function moveBall() {
-        if (!ball.parentElement) return; 
+        function moveBall() {
+            if (!ball.parentElement) return; 
 
-        const top = parseFloat(ball.style.top);
-        ball.style.top = top + speed + "px";
+            const top = parseFloat(ball.style.top);
+            ball.style.top = top + speed + "px";
 
-        const ballRect = ball.getBoundingClientRect();
-        const termRect = terminal.getBoundingClientRect();
+            const ballRect = ball.getBoundingClientRect();
+            const termRect = terminal.getBoundingClientRect();
 
-        if (ballRect.top > termRect.bottom + 50) {
-            ball.remove();
-            balls = balls.filter(b => b !== ball);
-            return;
-        }
+            if (ballRect.top > termRect.bottom + 50) {
+                ball.remove();
+                balls = balls.filter(b => b !== ball);
+                return;
+            }
 
-        if (
-            mouse.x >= ballRect.left &&
-            mouse.x <= ballRect.right &&
-            mouse.y >= ballRect.top &&
-            mouse.y <= ballRect.bottom
-        ) {
-            explodeBall(ball);
-            balls = balls.filter(b => b !== ball);
-            return;
-        }
-
-        if (protectActive && shield) {
-            const shieldRect = shield.getBoundingClientRect();
             if (
-                ballRect.bottom >= shieldRect.top &&
-                ballRect.top <= shieldRect.bottom &&
-                ballRect.right >= shieldRect.left &&
-                ballRect.left <= shieldRect.right
+                mouse.x >= ballRect.left &&
+                mouse.x <= ballRect.right &&
+                mouse.y >= ballRect.top &&
+                mouse.y <= ballRect.bottom
             ) {
                 explodeBall(ball);
                 balls = balls.filter(b => b !== ball);
                 return;
             }
-        }
 
-        if (
-            ballRect.bottom >= termRect.top &&
-            ballRect.top <= termRect.bottom &&
-            ballRect.right >= termRect.left &&
-            ballRect.left <= termRect.right
-        ) {
-            hits++;
-            shakeTerminal();
-            ball.remove();
-            balls = balls.filter(b => b !== ball);
-            if (hits >= 100) {
-                terminal.innerHTML = `<h1 style='color:red; font-family: "Press Start 2P", monospace; text-align:center;'>TERMINAL DESTROYED!</h1>`;
+            if (protectActive && shield) {
+                const shieldRect = shield.getBoundingClientRect();
+                if (
+                    ballRect.bottom >= shieldRect.top &&
+                    ballRect.top <= shieldRect.bottom &&
+                    ballRect.right >= shieldRect.left &&
+                    ballRect.left <= shieldRect.right
+                ) {
+                    explodeBall(ball);
+                    balls = balls.filter(b => b !== ball);
+                    return;
+                }
             }
-            return;
+
+            if (
+                ballRect.bottom >= termRect.top &&
+                ballRect.top <= termRect.bottom &&
+                ballRect.right >= termRect.left &&
+                ballRect.left <= termRect.right
+            ) {
+                hits++;
+                shakeTerminal();
+                ball.remove();
+                balls = balls.filter(b => b !== ball);
+                if (hits >= 100) {
+                    terminal.innerHTML = `<h1 style='color:red; font-family: "Press Start 2P", monospace; text-align:center;'>TERMINAL DESTROYED!</h1>`;
+                }
+                return;
+            }
+
+            requestAnimationFrame(moveBall);
         }
 
         requestAnimationFrame(moveBall);
     }
-
-    requestAnimationFrame(moveBall);
 }
 
 function explodeBall(ball) {
-    const rect = ball.getBoundingClientRect();
-    const explosion = document.createElement("div");
-    explosion.style.position = "absolute";
-    explosion.style.left = rect.left + "px";
-    explosion.style.top = rect.top + "px";
-    explosion.style.width = "30px";
-    explosion.style.height = "30px";
-    explosion.style.background = "orange";
-    explosion.style.borderRadius = "50%";
-    explosion.style.opacity = "1";
-    explosion.style.transition = "opacity 0.3s, transform 0.3s";
-    document.body.appendChild(explosion);
+    if (mode === "terminal"){
+        const rect = ball.getBoundingClientRect();
+        const explosion = document.createElement("div");
+        explosion.style.position = "absolute";
+        explosion.style.left = rect.left + "px";
+        explosion.style.top = rect.top + "px";
+        explosion.style.width = "30px";
+        explosion.style.height = "30px";
+        explosion.style.background = "orange";
+        explosion.style.borderRadius = "50%";
+        explosion.style.opacity = "1";
+        explosion.style.transition = "opacity 0.3s, transform 0.3s";
+        document.body.appendChild(explosion);
 
-    setTimeout(() => {
-        explosion.style.opacity = "0";
-        explosion.style.transform = "scale(2)";
-    }, 10);
+        setTimeout(() => {
+            explosion.style.opacity = "0";
+            explosion.style.transform = "scale(2)";
+        }, 10);
 
-    setTimeout(() => explosion.remove(), 310);
+        setTimeout(() => explosion.remove(), 310);
 
-    ball.remove();
+        ball.remove();
+    }
 }
 
 function shakeTerminal() {
-    terminal.style.transition = "transform 0.05s";
-    terminal.style.transform = "translateX(-10px)";
-    setTimeout(() => { terminal.style.transform = "translateX(10px)"; }, 50);
-    setTimeout(() => { terminal.style.transform = "translateX(-5px)"; }, 100);
-    setTimeout(() => { terminal.style.transform = "translateX(5px)"; }, 150);
-    setTimeout(() => { terminal.style.transform = "translateX(0px)"; }, 200);
+    if (mode === "terminal"){
+        terminal.style.transition = "transform 0.05s";
+        terminal.style.transform = "translateX(-10px)";
+        setTimeout(() => { terminal.style.transform = "translateX(10px)"; }, 50);
+        setTimeout(() => { terminal.style.transform = "translateX(-5px)"; }, 100);
+        setTimeout(() => { terminal.style.transform = "translateX(5px)"; }, 150);
+        setTimeout(() => { terminal.style.transform = "translateX(0px)"; }, 200);
+    }
 }
 
 
 function toggleProtect() {
-    protectActive = !protectActive;
-    if (protectActive) {
- 
-        shield = document.createElement("div");
-        shield.style.position = "absolute";
-        const termRect = terminal.getBoundingClientRect();
-        shield.style.left = termRect.left + "px";
-        shield.style.top = termRect.top + "px";
-        shield.style.width = termRect.width + "px";
-        shield.style.height = "5px";
-        shield.style.background = "#0f0";
-        shield.style.opacity = "0.6";
-        shield.style.zIndex = 20;
-        document.body.appendChild(shield);
-    } else {
+    if (mode === "terminal"){
+        protectActive = !protectActive;
+        if (protectActive) {
+    
+            shield = document.createElement("div");
+            shield.style.position = "absolute";
+            const termRect = terminal.getBoundingClientRect();
+            shield.style.left = termRect.left + "px";
+            shield.style.top = termRect.top + "px";
+            shield.style.width = termRect.width + "px";
+            shield.style.height = "5px";
+            shield.style.background = "#0f0";
+            shield.style.opacity = "0.6";
+            shield.style.zIndex = 20;
+            document.body.appendChild(shield);
+        } else {
 
-        if (shield) shield.remove();
-        shield = null;
-    }
-}
-
-input.addEventListener("keydown", e => {
-    if (e.key === "Enter") {
-        const cmd = input.value.trim().toLowerCase();
-        if (cmd === "protect") {
-            toggleProtect();
+            if (shield) shield.remove();
+            shield = null;
         }
     }
-});
+}
+if (mode === "terminal"){
+    input.addEventListener("keydown", e => {
+        if (e.key === "Enter") {
+            const cmd = input.value.trim().toLowerCase();
+            if (cmd === "protect") {
+                toggleProtect();
+            }
+        }
+    });
+}
 </script>
 
 </body>

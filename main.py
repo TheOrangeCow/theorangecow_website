@@ -135,7 +135,21 @@ def command():
                 url = f"http://87.106.74.42/repo/{repo_name}"
                 return jsonify({"output": f"Opening GitHub repository {repo_name}...", "prompt": build_prompt(), "redirect": url})
         if target in folder_contents:
-            return jsonify({"output": f"Opening {target}...", "prompt": build_prompt(), "url": folder_contents[target]})
+            return jsonify({"output": f"Opening {target}...", "prompt": build_prompt(), "redirect": folder_contents[target]})
         return jsonify({"output": "Link or repository not found", "prompt": build_prompt()})
+
+    if cmd.lower().startswith("load"):
+        if current_path == "github_repos/":
+            github_repos = get_github_repos()
+            dirs = github_repos if github_repos else ["<Could not fetch GitHub repos>"]
+        elif current_path == "":
+            dirs = list(CUSTOM_DIR.keys())
+        else:
+            dirs = list(CUSTOM_DIR.get(current_path, {}).keys())
+        ouput = ""
+        for button in dirs:
+            ouput += f"<button onclick = 'gotoplace({button})'>{button}</button>\n"
+        return jsonify({"output": ouput, "prompt": build_prompt()})
+
     return jsonify({"output": "Command not recognized", "prompt": build_prompt()})
 
