@@ -47,6 +47,14 @@ def get_github_repos():
 def index():
     return render_template("index.html")
 
+@app.route('/update', methods=['POST'])
+def update():
+    print("here")
+    if request.headers.get('X-Hub-Signature-256') != PASSWORD:
+        return "Forbidden", 403
+    subprocess.Popen(["/bin/bash", "/var/www/flaskapp/update_app.sh"])
+    return "OK", 200
+
 @app.route("/repo/<repo_name>")
 def repo_page(repo_name):
     repo_url = f"https://api.github.com/repos/TheOrangeCow/{repo_name}"
