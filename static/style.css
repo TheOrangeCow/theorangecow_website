@@ -9,17 +9,29 @@ body {
 
 #title {
     font-family: 'Press Start 2P', monospace;
-    width: 90%;
-    max-width: 95px;
-    font-size: auto;
+
+    font-size: calc(20px + 5vw);
+
     color: orange;
     text-align: center;
     position: relative;
     top: -5em;
     animation: drop 0.6s linear forwards;
+
     text-shadow:
         0.08em 0.08em #b35c00,
         0.16em 0.16em #803f00;
+
+    max-width: 90%;
+    margin: 0 auto;
+    white-space: nowrap;
+}
+
+
+@media (min-width: 1056px) { 
+    #title {
+        font-size: 95px;
+    }
 }
 #buttonUI{
     width: 80%;
