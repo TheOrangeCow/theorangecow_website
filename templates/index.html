@@ -201,12 +201,27 @@ async function fileload(){
                 fileContainer.innerHTML = data.output;
             }
             if (data.prompt) {
-                fileContainerPromt.textContent = "Location: " + data.prompt;
+                fileContainerPromt.textContent = "Location: " + data.prompt + "<button onclick = 'back()'>Back</button>";
             }
             if (data.redirect) {
                 window.location.href = data.redirect;
             }
         }catch (err) {
+            output.innerHTML += "Error executing command\n";
+        }
+    }
+}
+
+async function back(){
+    if (mode = "mobile"){
+        try {
+            const res = await fetch("/command", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ command: "cd .." })
+            });
+
+         }catch (err) {
             output.innerHTML += "Error executing command\n";
         }
     }
