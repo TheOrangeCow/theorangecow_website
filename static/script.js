@@ -286,16 +286,13 @@ function createBall() {
                 }
                 return;
             }
-            if (!isVisible) {
-                requestAnimationFrame(moveBall);
-                return
-            }
+
+            requestAnimationFrame(moveBall);
+            
+            
         }
 
-        if (!isVisible) {
-            requestAnimationFrame(moveBall);
-            return
-        }
+        requestAnimationFrame(moveBall);
     }
 }
 
