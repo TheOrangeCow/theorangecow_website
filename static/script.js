@@ -62,6 +62,24 @@ switchEl.addEventListener("change", () => {
     }
 });
 
+function checkMobileMode() {
+    const mobileThreshold = 768;
+    if (window.innerWidth <= mobileThreshold) {
+        // switch to mobile mode
+        terminal.style.display = "none";
+        buttonUI.style.display = "block";
+        switchEl.checked = true;
+        mode = "mobile";
+        fileload();
+    } else {
+        terminal.style.display = "block";
+        buttonUI.style.display = "none";
+        switchEl.checked = false;
+        mode = "terminal";
+    }
+}
+checkMobileMode();
+window.addEventListener("resize", checkMobileMode);
 function spawnDust() {
     if (mode === "terminal"){
         const rect = title.getBoundingClientRect();
