@@ -221,7 +221,7 @@ async function back(){
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({ command: "cd .." })
             });
-
+            fileload()
          }catch (err) {
             output.innerHTML += "Error executing command\n";
         }
