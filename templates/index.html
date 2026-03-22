@@ -67,7 +67,7 @@ body {
     position: relative;
 }
 
-#terminal.show, #buttonUI.show {
+#terminal.show {
     opacity: 1;
 }
 
@@ -327,24 +327,25 @@ if (mode === "terminal"){
 
 }
 
-if (mode === "terminal"){
-    let hits = 0;
-    let balls = [];
-    let protectActive = false;
-    let shield = null;
 
+let hits = 0;
+let balls = [];
+let protectActive = false;
+let shield = null;
+
+if (mode === "terminal"){
     function startBalls() {
         setInterval(() => {
             createBall();
         }, 800);
     }
-
-    let mouse = { x: 0, y: 0 };
-    document.addEventListener("mousemove", e => {
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
-    });
 }
+
+let mouse = { x: 0, y: 0 };
+document.addEventListener("mousemove", e => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+});
 
 function createBall() {
     if (mode === "terminal"){
@@ -424,7 +425,6 @@ function createBall() {
 }
 
 function explodeBall(ball) {
-    if (mode === "terminal"){
         const rect = ball.getBoundingClientRect();
         const explosion = document.createElement("div");
         explosion.style.position = "absolute";
@@ -446,8 +446,8 @@ function explodeBall(ball) {
         setTimeout(() => explosion.remove(), 310);
 
         ball.remove();
-    }
 }
+
 
 function shakeTerminal() {
     if (mode === "terminal"){
