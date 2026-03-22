@@ -177,12 +177,19 @@ let hits = 0;
 let balls = [];
 let protectActive = false;
 let shield = null;
+let isVisible = true;
+
+document.addEventListener("visibilitychange", () => {
+    isVisible = !document.hidden;
+});
 
 if (mode === "terminal"){
     function startBalls() {
         setInterval(() => {
-            createBall();
-        }, 800);
+            if (isVisible && mode === "terminal") {
+                createBall();
+            }
+        }, 1500);
     }
 }
 
@@ -204,7 +211,7 @@ function createBall() {
 
         balls.push(ball); 
 
-        const speed = Math.random() + 1; 
+        const speed = Math.random() * 0.5 + 0.2; 
 
         function moveBall() {
             if (!ball.parentElement) return; 
@@ -261,11 +268,16 @@ function createBall() {
                 }
                 return;
             }
-
-            requestAnimationFrame(moveBall);
+            if (!isVisible) {
+                requestAnimationFrame(moveBall);
+                return
+            }
         }
 
-        requestAnimationFrame(moveBall);
+        if (!isVisible) {
+            requestAnimationFrame(moveBall);
+            return
+        }
     }
 }
 
