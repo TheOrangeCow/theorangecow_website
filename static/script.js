@@ -286,12 +286,8 @@ function createBall() {
                 }
                 return;
             }
-
             requestAnimationFrame(moveBall);
-            
-            
         }
-
         requestAnimationFrame(moveBall);
     }
 }

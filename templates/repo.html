@@ -1,119 +1,118 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>{{ name }}</title>
+    <title>{{ name }}</title>
+    <style>
+        body {
+            background: #0d1117;
+            color: #c9d1d9;
+            font-family: Arial;
+        }
 
-<style>
+        .container {
+            width: 900px;
+            margin: auto;
+        }
 
-body{
-    background:#0d1117;
-    color:#c9d1d9;
-    font-family:Arial;
-}
+        .header {
+            text-align: center;
+            margin-top: 40px;
+        }
 
-.container{
-    width:900px;
-    margin:auto;
-}
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin: 20px 0;
+        }
 
-.header{
-    text-align:center;
-    margin-top:40px;
-}
+        .stat {
+            background: #161b22;
+            padding: 10px 20px;
+            border-radius: 6px;
+        }
 
-.stats{
-    display:flex;
-    justify-content:center;
-    gap:25px;
-    margin:20px 0;
-}
+        button {
+            background: #238636;
+            border: none;
+            padding: 10px 18px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: white;
+        }
 
-.stat{
-    background:#161b22;
-    padding:10px 20px;
-    border-radius:6px;
-}
+        .readme {
+            margin-top: 40px;
+            padding: 30px;
+            background: #161b22;
+            border-radius: 8px;
+        }
 
-button{
-    background:#238636;
-    border:none;
-    padding:10px 18px;
-    font-size:16px;
-    border-radius:6px;
-    cursor:pointer;
-    color:white;
-}
+        pre {
+            background: #0d1117;
+            padding: 15px;
+            overflow-x: auto;
+        }
 
-.readme{
-    margin-top:40px;
-    padding:30px;
-    background:#161b22;
-    border-radius:8px;
-}
+        code {
+            background: #0d1117;
+            padding: 3px 6px;
+        }
 
-pre{
-    background:#0d1117;
-    padding:15px;
-    overflow-x:auto;
-}
+        .contributors {
+            margin-top: 30px;
+            display: flex;
+            gap: 10px;
+        }
 
-code{
-    background:#0d1117;
-    padding:3px 6px;
-}
-
-.contributors{
-    margin-top:30px;
-    display:flex;
-    gap:10px;
-}
-
-.contributors img{
-    width:40px;
-    border-radius:50%;
-}
-
-</style>
+        .contributors img {
+            width: 40px;
+            border-radius: 50%;
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="container">
+    <div class="container">
 
-<div class="header">
+        <div class="header">
 
-<h1>{{ name }}</h1>
+            <h1>{{ name }}</h1>
 
-<p>{{ description }}</p>
+            <p>{{ description }}</p>
 
-<div class="stats">
+            <div class="stats">
 
-<div class="stat">⭐ Stars: {{ stars }}</div>
-<div class="stat">🍴 Forks: {{ forks }}</div>
-<div class="stat">👀 Watchers: {{ watchers }}</div>
-<div class="stat">💻 Language: {{ language }}</div>
+                <div class="stat">⭐ Stars: {{ stars }}</div>
+                <div class="stat">🍴 Forks: {{ forks }}</div>
+                <div class="stat">👀 Watchers: {{ watchers }}</div>
+                <div class="stat">💻 Language: {{ language }}</div>
 
-</div>
+            </div>
 
-<a href="{{ github }}" target="_blank">
-<button>View on GitHub</button>
-</a>
+            <a href="{{ github }}" target="_blank">
+                <button>View on GitHub</button>
+            </a>
 
-</div>
+        </div>
 
-<div class="contributors">
-{% for c in contributors %}
-<a href="{{ c.url }}" target="_blank">
-<img src="{{ c.avatar }}">
-</a>
-{% endfor %}
-</div>
+        <div class="contributors">
+            {% for c in contributors %}
+            <a href="{{ c.url }}" target="_blank">
+                <img src="{{ c.avatar }}">
+            </a>
+            {% endfor %}
+        </div>
 
-<div class="readme">
-{{ readme | safe }}
-</div>
+        <div class="readme">
+            {{ readme | safe }}
+        </div>
 
-</div>
+    </div>
 
 </body>
+
 </html>
