@@ -148,7 +148,7 @@ def command():
             dirs = list(CUSTOM_DIR.get(current_path, {}).keys())
         ouput = ""
         for button in dirs:
-            ouput += f"<button onclick=\"gotoplace('{button}')\">{button}</button>\n"
+            ouput += f"<button onclick=\"gotoplace('{button}')\">{button}</button><br>\n"
         return jsonify({"output": ouput, "prompt": build_prompt()})
 
     return jsonify({"output": "Command not recognized", "prompt": build_prompt()})

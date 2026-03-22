@@ -56,7 +56,7 @@ body {
     to { transform: translate(var(--x), var(--y)); opacity: 0; }
 }
 
-#terminal {
+#terminal, #buttonUI {
     width: 80%;
     margin: 120px auto;
     padding: 20px;
@@ -67,7 +67,7 @@ body {
     position: relative;
 }
 
-#terminal.show {
+#terminal.show, #buttonUI.show {
     opacity: 1;
 }
 
@@ -134,6 +134,12 @@ body {
 input:checked + .slider::before {
     transform: translateX(24px);
 }
+button{
+    border: #00ff00;
+    border-radius: 3px;
+    padding: 5px;
+    color: #00ff00;
+}
 </style>
 </head>
 
@@ -153,9 +159,10 @@ input:checked + .slider::before {
     </div>
     <input id="cmd" autocomplete="off">
 </div>
-<div id="filepromt"></div>
+
 <div id="buttonUI" style="display: none;">
     <h3>Browse</h3>
+    <div id="filepromt"></div>
     <div id="file">
 
     </div>
@@ -174,27 +181,28 @@ const fileContainerPromt = document.getElementById("filepromt");
 let mode = "terminal"
 
 async function fileload(){
-    try {
-        const res = await fetch("/command", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ command: "load" })
-        });
-        const data = await res.json();
-        if (data.output){
-            fileContainer.innerHTML = data.output;
+    if (mode = "mobile"){
+        try {
+            const res = await fetch("/command", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ command: "load" })
+            });
+            const data = await res.json();
+            if (data.output){
+                fileContainer.innerHTML = data.output;
+            }
+            if (data.prompt) {
+                fileContainerPromt.textContent = "Location: " + data.prompt;
+            }
+            if (data.redirect) {
+                window.location.href = data.redirect;
+            }
+        }catch (err) {
+            output.innerHTML += "Error executing command\n";
         }
-        if (data.prompt) {
-            fileContainerPromt.textContent = data.prompt;
-        }
-        if (data.redirect) {
-            window.location.href = data.redirect;
-        }
-    }catch (err) {
-        output.innerHTML += "Error executing command\n";
     }
 }
-
 
 switchEl.addEventListener("change", () => {
     if (switchEl.checked) {
@@ -208,13 +216,6 @@ switchEl.addEventListener("change", () => {
         mode = "terminal"
     }
 });
-
-
-
-
-
-
-
 
 function spawnDust() {
     if (mode === "terminal"){
@@ -240,31 +241,27 @@ function spawnDust() {
 
 
 async function gotoplace(place){
-    if (place.endsWith(".github")){
-        const res = await fetch("/command", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ command: "start " + place }) 
-        });
-        const data = await res.json();
-        if (data.redirect) {
-            window.location.href = data.redirect;
+    if (mode === "mobile"){
+        if (place.endsWith(".github")){
+            const res = await fetch("/command", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ command: "start " + place }) 
+            });
+            const data = await res.json();
+            if (data.redirect) {
+                window.location.href = data.redirect;
+            }
+        }else{
+            const res = await fetch("/command", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ command: "cd " + place })
+            });
+            fileload()
         }
-    }else{
-        const res = await fetch("/command", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ command: "cd " + place })
-        });
-        fileload()
     }
 }
-
-
-
-
-
-
 
 title.addEventListener("animationend", () => {
     spawnDust();
