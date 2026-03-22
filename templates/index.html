@@ -153,7 +153,8 @@ input:checked + .slider::before {
     </div>
     <input id="cmd" autocomplete="off">
 </div>
-<div id="buttonUI">
+<div id="filepromt"></div>
+<div id="buttonUI" style="display: none;">
     <h3>Browse</h3>
     <div id="file">
 
@@ -172,12 +173,35 @@ const fileContainer = document.getElementById("file");
 const fileContainerPromt = document.getElementById("filepromt");
 let mode = "terminal"
 
+async function fileload(){
+    try {
+        const res = await fetch("/command", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify("load")
+        });
+        const data = await res.json();
+        if (data.output){
+            fileContainer.innerHTML = data.output;
+        }
+        if (data.prompt) {
+            fileContainerPromt.textContent = data.prompt;
+        }
+        if (data.redirect) {
+            window.location.href = data.redirect;
+        }
+    }catch (err) {
+        output.innerHTML += "Error executing command\n";
+    }
+}
+
+
 switchEl.addEventListener("change", () => {
     if (switchEl.checked) {
         terminal.style.display = "none";
         buttonUI.style.display = "block";
         mode = "mobile"
-        renderFiles(currentFolder);
+        fileload();
     } else {
         terminal.style.display = "block";
         buttonUI.style.display = "none";
@@ -214,27 +238,6 @@ function spawnDust() {
     }
 }
 
-async function fileload(){
-    try {
-        const res = await fetch("/command", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify("load")
-        });
-        const data = await res.json();
-        if (data.output){
-            fileContainer.innerHTML = data.output;
-        }
-        if (data.prompt) {
-            fileContainerPromt.textContent = data.prompt;
-        }
-        if (data.redirect) {
-            window.location.href = data.redirect;
-        }
-    }catch (err) {
-        output.innerHTML += "Error executing command\n";
-    }
-}
 
 async function gotoplace(place){
     if (place.endsWith(".github")){
