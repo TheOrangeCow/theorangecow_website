@@ -40,6 +40,10 @@ body {
     padding: 20px;
     border: 2px solid #00ff00;
     min-height: 220px;
+    opacity:0;
+}
+#buttonUI.show {
+    opacity: 1;
 }
 
 @keyframes drop {
