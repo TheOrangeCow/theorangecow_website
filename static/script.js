@@ -63,7 +63,7 @@ switchEl.addEventListener("change", () => {
 });
 
 function checkMobileMode() {
-    const mobileThreshold = 2752;
+    const mobileThreshold = 810;
     if (window.innerWidth <= mobileThreshold) {
         terminal.style.display = "none";
         buttonUI.style.display = "block";
