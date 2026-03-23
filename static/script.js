@@ -126,6 +126,7 @@ async function gotoplace(place){
 title.addEventListener("animationend", () => {
     spawnDust();
     terminal.classList.add("show");
+    buttonUI.classList.add("show");
     input.focus();
     startBalls();
 });
