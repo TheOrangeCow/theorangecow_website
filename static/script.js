@@ -199,14 +199,13 @@ document.addEventListener("visibilitychange", () => {
     isVisible = !document.hidden;
 });
 
-if (mode === "terminal"){
-    function startBalls() {
-        setInterval(() => {
-            if (isVisible && mode === "terminal") {
-                createBall();
-            }
-        }, 1500);
-    }
+
+function startBalls() {
+    setInterval(() => {
+        if (isVisible && mode === "terminal") {
+            createBall();
+        }
+    }, 1500);
 }
 
 let mouse = { x: 0, y: 0 };
