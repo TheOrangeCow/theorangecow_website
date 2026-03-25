@@ -15,13 +15,9 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 CUSTOM_DIR = {
-    "house-778/": {
-        "site": "http://127.0.0.1:5000/project/house-778",
-        "house-778.github": "http://127.0.0.1:5000/repo/house-778"
-    },
-    "cheese/": {
-        "site": "https://example.com/projectx",
-        "Cheese.github": "https://example.com/projecty"
+    "cow-servers/": {
+        "site": "/cow-servers/",
+        "cow-servers.github": "/repo/cow_servers"
     },
     "github_repos/": {}
 }
@@ -128,7 +124,7 @@ def command():
     if cmd.lower().startswith("start "):
         target = cmd[6:].strip()
         folder_contents = CUSTOM_DIR.get(current_path, {})
-        if current_path == "github_repos/":
+        if target.endswith(".github"):
             github_repos = get_github_repos()
             if target in github_repos:
                 repo_name = target.replace(".github", "")
