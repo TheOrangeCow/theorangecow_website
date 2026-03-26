@@ -58,7 +58,8 @@ switchEl.addEventListener("change", () => {
     } else {
         terminal.style.display = "block";
         buttonUI.style.display = "none";
-        mode = "terminal"
+        mode = "terminal";
+        input.focus();
     }
 });
 
