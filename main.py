@@ -19,7 +19,7 @@ CUSTOM_DIR = {
         "site": "/cow-servers/",
         "cow-servers.github": "/repo/cow_servers"
     },
-    "github_repods/": {}
+    "github_repos/": {}
 }
 
 def get_current_folder():
