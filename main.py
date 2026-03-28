@@ -10,7 +10,7 @@ import subprocess
 from flask import request, abort
 
 app = Flask(__name__)
-app.secret_key = "super-secret-key"
+app.secret_key = os.environ.get("WEBHOOK_SECRET")
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
@@ -48,23 +48,7 @@ def get_github_repos():
 def index():
     return render_template("index.html")
 
-SECRET = os.environ.get("WEBHOOK_SECRET").encode()
 
-@app.route('/update', methods=['POST'])
-def update():
-    signature = request.headers.get('X-Hub-Signature-256')
-    if not signature:
-        return "Forbidden", 403
-
-    sha_name, received_sig = signature.split('=')
-
-    mac = hmac.new(SECRET, msg=request.data, digestmod=hashlib.sha256)
-
-    if not hmac.compare_digest(mac.hexdigest(), received_sig):
-        return "Forbidden", 403
-
-    subprocess.Popen(["/bin/bash", "/var/www/flaskapp/update_app.sh"])
-    return "OK", 200
 
 @app.route("/repo/<repo_name>")
 def repo_page(repo_name):
