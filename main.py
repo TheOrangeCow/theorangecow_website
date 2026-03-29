@@ -38,15 +38,24 @@ def build_prompt():
         return f"C:\\TheOrangeCow\\{path.rstrip('/')}>"
     return "C:\\TheOrangeCow>"
 
+
 def get_github_repos():
-    url = "https://api.github.com/users/TheOrangeCow/repos"
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
-        data = response.json()
-        return [repo["name"].lower() + ".github" for repo in data]
-    except:
-        return []
+    repos = []
+    page = 1
+    per_page = 100
+    while True:
+        url = f"https://api.github.com/users/TheOrangeCow/repos?per_page={per_page}&page={page}"
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+            data = response.json()
+            if not data:
+                break
+            repos.extend([repo["name"].lower() + ".github" for repo in data])
+            page += 1
+        except requests.RequestException:
+            break
+    return repos
 
 @app.route("/")
 def index():
