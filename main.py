@@ -17,7 +17,8 @@ Session(app)
 CUSTOM_DIR = {
     "favourite/": {
         "cow-servers.github": "/repo/cow_servers",
-        "amoebavirtualmachine.github": "/repo/amoebavirtualmachine"
+        "amoebavirtualmachine.github": "/repo/amoebavirtualmachine",
+        "unwinnable-0-x.github":"/repo/unwinnable-0-x"
     },
     "cow-servers/": {
         "Site": "https://cow-servers.theorangecow.org/",
