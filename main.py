@@ -15,8 +15,12 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 CUSTOM_DIR = {
+    "favourite/": {
+        "cow-servers.github": "/repo/cow_servers",
+        "amoebavirtualmachine.github": "/repo/amoebavirtualmachine"
+    },
     "cow-servers/": {
-        "site": "/cow-servers/",
+        "Site": "https://cow-servers.theorangecow.org/",
         "cow-servers.github": "/repo/cow_servers"
     },
     "github_repos/": {}
@@ -112,7 +116,7 @@ def command():
             github_repos = get_github_repos()
             if target in github_repos:
                 repo_name = target.replace(".github", "")
-                url = f"http://87.106.74.42/repo/{repo_name}"
+                url = f"http://theorangecow.org/repo/{repo_name}"
                 return jsonify({"output": f"Opening GitHub repository {repo_name}...", "prompt": build_prompt(), "redirect": url})
         if target in folder_contents:
             return jsonify({"output": f"Opening {target}...", "prompt": build_prompt(), "redirect": folder_contents[target]})
