@@ -130,19 +130,27 @@ def command():
         else:
             return jsonify({"output": "Folder not found", "prompt": build_prompt()})
 
-    if cmd.lower().startswith("start "):
-        target = cmd[6:].strip()
+    if cmd.lower().startswith("cd "):
+        target = cmd[3:].strip().rstrip("/")
         folder_contents = CUSTOM_DIR.get(current_path, {})
-        if target in folder_contents:
-            value = folder_contents[target]
+        matched_key = None
+        for key in folder_contents:
+            if key.rstrip("/") == target:
+                matched_key = key
+                break
+        
+        if matched_key:
+            value = folder_contents[matched_key]
             if isinstance(value, dict):
-                set_current_folder(current_path + target + "/")
+                set_current_folder(current_path + matched_key)
                 return jsonify({"output": f"Entered folder {target}", "prompt": build_prompt()})
             else:
                 return jsonify({"output": f"Opening {target}...", "prompt": build_prompt(), "redirect": value})
-        if target in folder_contents:
-            return jsonify({"output": f"Opening {target}...", "prompt": build_prompt(), "redirect": folder_contents[target]})
-        return jsonify({"output": "Link or repository not found", "prompt": build_prompt()})
+        elif target == "..":
+            set_current_folder("")
+            return jsonify({"output": "Back to root", "prompt": build_prompt()})
+        else:
+            return jsonify({"output": "Folder not found", "prompt": build_prompt()})
 
     if cmd.lower().startswith("load"):
         if current_path == "github_repos/":
