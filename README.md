@@ -1,5 +1,5 @@
 # TheOrangeCow Website
-This is my new website it hosts all of my projects (soon)
+This is my new website it hosts all of my projects
 
 ### Home
 
