@@ -28,7 +28,7 @@ CUSTOM_DIR = {
     },
     "house-778/": {
         "site": "https://house-778.theorangecow.org/",
-        "cow-servers.github": "/repo/house-778"
+        "house-778.github": "/repo/house-778"
     },
     "github_repos/": {}
 }
@@ -126,8 +126,8 @@ def command():
             return jsonify({"output": f"Entered folder {target}", "prompt": build_prompt()})
         else:
             return jsonify({"output": "Folder not found", "prompt": build_prompt()})
-    if cmd.lower().startswith("start "):
-        target = cmd[6:].strip()
+    if cmd.lower().startswith("./"):
+        target = cmd[2:].strip()
         folder_contents = CUSTOM_DIR.get(current_path, {})
         if target.endswith(".github"):
             github_repos = get_github_repos()
@@ -152,5 +152,17 @@ def command():
             ouput += f"<button onclick=\"gotoplace('{button}')\">{button}</button><br>\n"
         return jsonify({"output": ouput, "prompt": build_prompt()})
 
+    if cmd.lower().startswith("help"):
+        return jsonify({"output": """Commands:
+cd <folder>   - Enter a directory
+dir           - View contents of the current folder
+./<file>      - Run a file
+
+(Sorry to anyone who actually knows the real commands)
+        """, "prompt": build_prompt()})
+
     return jsonify({"output": "Command not recognized", "prompt": build_prompt()})
+
+    return jsonify({"output": "Command not recognized", "prompt": build_prompt()})
+
 
