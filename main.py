@@ -157,6 +157,8 @@ def command():
 cd <folder>   - Enter a directory
 dir           - View contents of the current folder
 ./<file>      - Run a file
+protect       - To toggle a sheld for the balls
+help          - To get the help menu
 
 (Sorry to anyone who actually knows the real commands)
         """, "prompt": build_prompt()})

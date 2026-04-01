@@ -9,6 +9,10 @@ const fileContainer = document.getElementById("file");
 const fileContainerPromt = document.getElementById("filepromt");
 let mode = "terminal"
 
+
+
+
+
 async function fileload(){
     if (mode = "mobile"){
         try {
@@ -137,6 +141,24 @@ const promptSpan = document.getElementById("prompt");
 
 function updatePrompt() {
     promptSpan.textContent = currentPath + " ";
+}
+
+try {
+    const res = await fetch("/command", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ command: help })
+    });
+    const data = await res.json();
+    if (data.output) output.innerHTML += data.output + "\n";
+    if (data.prompt) {
+        currentPath = data.prompt;
+        updatePrompt();
+    }
+                
+
+} catch (err) {
+    output.innerHTML += "Error executing command\n";
 }
 
 updatePrompt();
