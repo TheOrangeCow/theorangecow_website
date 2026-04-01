@@ -16,13 +16,19 @@ Session(app)
 
 CUSTOM_DIR = {
     "favourite/": {
-        "cow-servers.github": "/repo/cow_servers",
+        "house-778": "https://house-778.theorangecow.org/",
+        "cow-servers": "https://cow-servers.theorangecow.org/",
         "amoebavirtualmachine.github": "/repo/amoebavirtualmachine",
+        "video-to-askii-art.github": "https://github.com/TheOrangeCow/Video-to-ASKII-Art",
         "unwinnable-0-x.github":"/repo/unwinnable-0-x"
     },
     "cow-servers/": {
-        "Site": "https://cow-servers.theorangecow.org/",
+        "site": "https://cow-servers.theorangecow.org/",
         "cow-servers.github": "/repo/cow_servers"
+    },
+    "house-778/": {
+        "site": "https://house-778.theorangecow.org/",
+        "cow-servers.github": "/repo/house-778"
     },
     "github_repos/": {}
 }
@@ -109,25 +115,31 @@ def command():
         else:
             dirs = list(CUSTOM_DIR.get(current_path, {}).keys())
         return jsonify({"output": "\n".join(dirs), "prompt": build_prompt()})
+
     if cmd.lower().startswith("cd "):
         target = cmd[3:].strip()
         if target == "..":
             set_current_folder("")
             return jsonify({"output": "Back to root", "prompt": build_prompt()})
-        elif target in CUSTOM_DIR:
-            set_current_folder(target)
-            return jsonify({"output": f"Entered folder {target}", "prompt": build_prompt()})
+        elif target in CUSTOM_DIR.get(current_path, {}):
+            if isinstance(CUSTOM_DIR[current_path][target], dict):
+                set_current_folder(current_path + target + "/")
+                return jsonify({"output": f"Entered folder {target}", "prompt": build_prompt()})
+            else:
+                return jsonify({"output": f"Opening {target}...", "prompt": build_prompt(), "redirect": CUSTOM_DIR[current_path][target]})
         else:
             return jsonify({"output": "Folder not found", "prompt": build_prompt()})
+
     if cmd.lower().startswith("start "):
         target = cmd[6:].strip()
         folder_contents = CUSTOM_DIR.get(current_path, {})
-        if target.endswith(".github"):
-            github_repos = get_github_repos()
-            if target in github_repos:
-                repo_name = target.replace(".github", "")
-                url = f"http://theorangecow.org/repo/{repo_name}"
-                return jsonify({"output": f"Opening GitHub repository {repo_name}...", "prompt": build_prompt(), "redirect": url})
+        if target in folder_contents:
+            value = folder_contents[target]
+            if isinstance(value, dict):
+                set_current_folder(current_path + target + "/")
+                return jsonify({"output": f"Entered folder {target}", "prompt": build_prompt()})
+            else:
+                return jsonify({"output": f"Opening {target}...", "prompt": build_prompt(), "redirect": value})
         if target in folder_contents:
             return jsonify({"output": f"Opening {target}...", "prompt": build_prompt(), "redirect": folder_contents[target]})
         return jsonify({"output": "Link or repository not found", "prompt": build_prompt()})
