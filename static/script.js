@@ -106,7 +106,7 @@ function spawnDust() {
 
 
 async function gotoplace(place){
-    if (mode === "mobile"){
+    if (mode == "mobile"){
         if (place.endsWith(".github")){
             const res = await fetch("/command", {
                 method: "POST",
