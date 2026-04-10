@@ -27,7 +27,7 @@ async function fileload(){
             }
             if (data.prompt) {
                 fileContainerPromt.textContent = "Location: " + data.prompt 
-                fileContainerPromt.innerHTML += "<button onclick = 'back()'>Back</button>";
+                fileContainerPromt.innerHTML += "<button class='buttonfileback'>Back</button>";
             }
             if (data.redirect) {
                 window.location.href = data.redirect;
@@ -384,9 +384,15 @@ if (mode === "terminal"){
 }
 
 
-document.querySelectorAll(".your-button-class").forEach(btn => {
+document.querySelectorAll(".buttonfile").forEach(btn => {
     btn.addEventListener("click", () => {
         gotoplace(btn.dataset.place);
+    });
+});
+
+document.querySelectorAll(".buttonfileback").forEach(btn => {
+    btn.addEventListener("click", () => {
+        back(btn.dataset.place);
     });
 });
 
