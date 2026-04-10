@@ -384,6 +384,12 @@ if (mode === "terminal"){
 }
 
 
+document.querySelectorAll(".your-button-class").forEach(btn => {
+    btn.addEventListener("click", () => {
+        gotoplace(btn.dataset.place);
+    });
+});
+
 const switchElContainer = document.querySelector('.switch');
 
 function updateSwitchPosition() {
