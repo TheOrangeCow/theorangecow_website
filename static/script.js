@@ -14,7 +14,7 @@ let mode = "terminal"
 
 
 async function fileload(){
-    if (mode = "mobile"){
+    if (mode  == "mobile"){
         try {
             const res = await fetch("/command", {
                 method: "POST",
@@ -39,7 +39,7 @@ async function fileload(){
 }
 
 async function back(){
-    if (mode = "mobile"){
+    if (mode  == "mobile"){
         try {
             const res = await fetch("/command", {
                 method: "POST",
@@ -147,7 +147,7 @@ try {
     const res = await fetch("/command", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ command: help })
+        body: JSON.stringify({ command: "help" })
     });
     const data = await res.json();
     if (data.output) output.innerHTML += data.output + "\n";
