@@ -27,7 +27,7 @@ async function fileload(){
             }
             if (data.prompt) {
                 fileContainerPromt.textContent = "Location: " + data.prompt 
-                fileContainerPromt.innerHTML += "<button class='buttonfileback'>Back</button>";
+                fileContainerPromt.innerHTML += "<button onclick = 'back()'>Back</button>";
             }
             if (data.redirect) {
                 window.location.href = data.redirect;
@@ -383,18 +383,6 @@ if (mode === "terminal"){
     });
 }
 
-
-document.querySelectorAll(".buttonfile").forEach(btn => {
-    btn.addEventListener("click", () => {
-        gotoplace(btn.dataset.place);
-    });
-});
-
-document.querySelectorAll(".buttonfileback").forEach(btn => {
-    btn.addEventListener("click", () => {
-        back(btn.dataset.place);
-    });
-});
 
 const switchElContainer = document.querySelector('.switch');
 
