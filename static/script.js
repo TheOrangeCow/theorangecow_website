@@ -142,7 +142,7 @@ const promptSpan = document.getElementById("prompt");
 function updatePrompt() {
     promptSpan.textContent = currentPath + " ";
 }
-async function help():
+async function help(){
     try {
         const res = await fetch("/command", {
             method: "POST",
