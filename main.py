@@ -18,6 +18,7 @@ CUSTOM_DIR = {
     "favourite/": {
         "house-778": "https://house-778.theorangecow.org/",
         "cow-servers": "https://cow-servers.theorangecow.org/",
+        "library": "https://library.theorangecow.org/",
         "amoebavirtualmachine.github": "/repo/amoebavirtualmachine",
         "video-to-askii-art.github": "https://github.com/TheOrangeCow/Video-to-ASKII-Art",
         "unwinnable-0-x.github":"/repo/unwinnable-0-x"
@@ -29,6 +30,10 @@ CUSTOM_DIR = {
     "house-778/": {
         "site": "https://house-778.theorangecow.org/",
         "house-778.github": "/repo/house-778"
+    },
+    "library": {
+        "site": "https://library.theorangecow.org/",
+        "library.github": "/repo/library"
     },
     "github_repos/": {}
 }
