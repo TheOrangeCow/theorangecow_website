@@ -1,0 +1,63 @@
+<!--
+
+     .-.;;;;;;'                                                   .-._   .-._.          
+    (_)  .; .;           .;;.    .-                             .: (_)`-'               
+         :  ;;-.  .-.   ;;  `;`-'.;.::..-.    . ,';.  ,:.,' .-. ::      .-.  `;     .-  
+       .:' ;;  ;.;.-'  ;;    :.  .;   ;   :   ;;  ;; :   ;.;.-' ::   _ ;   ;';  ;   ;   
+     .-:._.;`  ` `:::';;     ;'.;'    `:::'-'';  ;;   `-:' `:::'`: .; )`;;'  `.' `.'    
+    (_/  `-           `;.__.'                ;    `.-._:'         `--'                  
+
+    -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='icon.ico') }}" type="image/x-icon">
+    <title>TheOrangeCow</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <br><br>
+    <div id="title">TheOrangeCow</div>
+    <label class="switch">
+        <input type="checkbox" id="modeSwitch">
+        <div class="slider"></div>
+    </label>
+
+    <div id="terminal">
+        <div id="quicklinks">
+            <h3>Quick Links</h3>
+            <button onclick="window.location.href = 'https://github.com/TheOrangeCow'">My Github</button>
+            <button onclick="window.location.href = 'https://house-778.theorangecow.org'">House-778</button>
+            <button onclick="window.location.href = 'https://cow-servers.theorangecow.org'">Cow Servers</button>
+            <button onclick="window.location.href = 'https://library.theorangecow.org'">Library</button>
+        </div>
+        <div id="output"></div>
+        <div>
+            <span id="prompt"></span>
+            <span id="typed"></span><span id="cursor">█</span>
+        </div>
+        <input id="cmd" autocomplete="off">
+    </div>
+
+    <div id="buttonUI" style="display: none;">
+        <div id="quicklinks">
+            <h3>Quick Links</h3>
+            <button onclick="window.location.href = 'https://github.com/TheOrangeCow'">My Github</button>
+            <button onclick="window.location.href = 'https://house-778.theorangecow.org'">House-778</button>
+            <button onclick="window.location.href = 'https://cow-servers.theorangecow.org'">Cow Servers</button>
+        </div>
+        <h1>Browse</h1>
+        <div id="filepromt"></div>
+        <div id="file">
+
+        </div>
+    </div>
+</body>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</html>
