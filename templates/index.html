@@ -1220,16 +1220,26 @@
         </section>
 
         {% if roadmap %}
-        <section>
-            <h2>What's coming</h2>
-            <ul>
-                {% for item in roadmap %}
-                <li>
-                    <strong>{{ item["title"] }}</strong> - <em>{{ item["status"].replace('_', ' ') }}</em>
-                    {% if item["description"] %}<p>{{ item["description"] }}</p>{% endif %}
-                </li>
-                {% endfor %}
-            </ul>
+        <section id="features" class="reveal">
+            <div class="wrap">
+                <div class="section-head">
+                    <div>
+                        <p class="eyebrow">// comming soon</p>
+                        <h2 class="heading"></h2>
+                    </div>
+                    <p class="section-note">to make a suggestion please make a cow account.</p>
+                </div>
+
+                <div class="svc-table">
+                    {% for item in roadmap %}
+                    <article class="svc-row" data-status="online">
+                        <div class="svc-name-col">
+                            <p class="svc-name">{{ item["title"] }} <span class="svc-status-tag">{{ item["status"].replace('_', ' ') }}</span></p>
+                            {% if item["description"] %}<p class="svc-desc">{{ item["description"] }}</p>{% endif %}
+                        </div>
+                    </article>
+                    {% endfor %}
+            
         </section>
         {% endif %}
 
