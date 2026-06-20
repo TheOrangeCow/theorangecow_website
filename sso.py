@@ -25,7 +25,7 @@ CLIENTS = {
     },
     "brain-wave": {
         "name": "Brain Wave",
-        "redirect_uri": "https://brain-wave.theorangecow.org/auth/cow/callback",
+        "redirect_uri": "https://brain-wave.theorangecow.org//cow/callback",
         "secret": os.environ.get("CLIENT_SECRET_BRAINWAVE", "dev-secret-brainwave"),
     },
 }
