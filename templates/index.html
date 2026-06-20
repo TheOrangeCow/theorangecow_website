@@ -923,28 +923,29 @@
                 <a href="#stats">stats</a>
                 <a href="#commits">commits</a>
                 <a href="#contact">contact</a>
+            
+                <div class="nav-right">
+                    <a class="btn-gh" href="https://github.com/TheOrangeCow" target="_blank" rel="noopener">
+                        github ↗
+                    </a>
+                    {% if current_user and current_user["username"] != "" %}
+                        <a class="btn-gh" href="https://theorangecow.org/features" target="_blank" rel="noopener">
+                            Feature Request ↗
+                        </a>
+                        <a class="btn-gh" href="https://theorangecow.org/account" target="_blank" rel="noopener">
+                            Cow Account ↗
+                        </a>
+                    {% else %}
+                        <a class="btn-gh" href="https://theorangecow.org/login" target="_blank" rel="noopener">
+                            Cow Account ↗
+                        </a>
+                    {% endif %}
+                    
+                    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
+                        <span></span><span></span><span></span>
+                    </button>
+                </div>
             </nav>
-            <div class="nav-right">
-                <a class="btn-gh" href="https://github.com/TheOrangeCow" target="_blank" rel="noopener">
-                    github ↗
-                </a>
-                {% if current_user and current_user["username"] != "" %}
-                    <a class="btn-gh" href="https://theorangecow.org/features" target="_blank" rel="noopener">
-                        Feature Request ↗
-                    </a>
-                    <a class="btn-gh" href="https://theorangecow.org/account" target="_blank" rel="noopener">
-                        Cow Account ↗
-                    </a>
-                {% else %}
-                    <a class="btn-gh" href="https://theorangecow.org/login" target="_blank" rel="noopener">
-                        Cow Account ↗
-                    </a>
-                {% endif %}
-                
-                <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
-                    <span></span><span></span><span></span>
-                </button>
-            </div>
         </div>
         <div class="mobile-links" id="mobileLinks">
             <a href="#about">about</a>
