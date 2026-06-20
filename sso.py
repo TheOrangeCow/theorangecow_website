@@ -15,13 +15,8 @@ CLIENTS = {
     },
     "house-778": {
         "name": "House-778",
-        "redirect_uri": "https://house-778.theorangecow.org/auth/cow/callback",
+        "redirect_uri": "https://auth.house-778.theorangecow.org/cow_callback.php",
         "secret": os.environ.get("CLIENT_SECRET_HOUSE778", "dev-secret-house778"),
-    },
-    "cow-servers": {
-        "name": "Cow Servers",
-        "redirect_uri": "https://cow-servers.theorangecow.org/auth/cow/callback",
-        "secret": os.environ.get("CLIENT_SECRET_COWSERVERS", "dev-secret-cowservers"),
     },
     "brain-wave": {
         "name": "Brain Wave",
