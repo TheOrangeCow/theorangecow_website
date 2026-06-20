@@ -1188,6 +1188,20 @@
             </div>
         </section>
 
+        {% if roadmap %}
+        <section>
+            <h2>What's coming</h2>
+            <ul>
+                {% for item in roadmap %}
+                <li>
+                    <strong>{{ item["title"] }}</strong> - <em>{{ item["status"].replace('_', ' ') }}</em>
+                    {% if item["description"] %}<p>{{ item["description"] }}</p>{% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
+
     </main>
 
     <footer id="contact">

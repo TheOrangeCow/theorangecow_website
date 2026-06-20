@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Feature requests</h2>
+
+<form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <label>Title</label>
+    <input type="text" name="title" required>
+    <label>Description</label>
+    <textarea name="description" rows="4"></textarea>
+    <button type="submit">Submit request</button>
+</form>
+
+<h3>All requests</h3>
+<ul>
+    {% for r in requests %}
+    <li>
+        <strong>{{ r["title"] }}</strong> - <em>{{ r["status"] }}</em><br>
+        <small>by {{ r["username"] }} on {{ r["created_at"] }}</small>
+        {% if r["description"] %}<p>{{ r["description"] }}</p>{% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

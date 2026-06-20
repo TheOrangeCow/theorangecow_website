@@ -50,20 +50,13 @@ def safe_next(target):
     return "/"
 
 
-
-@app.route("/")
-def index():
-    return render_template("index.html")
-
-
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
     next_url = safe_next(request.args.get("next") or request.form.get("next"))
 
     if request.method == "POST":
         if not csrf_ok():
-            flash("That form expired — try again.", "error")
+            flash("That form expired - try again.", "error")
             return redirect(url_for("login", next=next_url))
 
         username = request.form.get("username", "").strip()
@@ -86,7 +79,7 @@ def signup():
 
     if request.method == "POST":
         if not csrf_ok():
-            flash("That form expired — try again.", "error")
+            flash("That form expired - try again.", "error")
             return redirect(url_for("signup", next=next_url))
 
         username = request.form.get("username", "").strip()
@@ -155,6 +148,90 @@ def sso_verify():
         "cow_user_id": payload["uid"],
     })
 
+
+def login_required(f):
+    from functools import wraps
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if not current_user():
+            return redirect(url_for("login", next=request.path))
+        return f(*args, **kwargs)
+    return wrapper
+
+
+@app.route("/features", methods=["GET", "POST"])
+@login_required
+def features():
+    user = current_user()
+
+    if request.method == "POST":
+        if not csrf_ok():
+            flash("That form expired - try again.", "error")
+            return redirect(url_for("features"))
+
+        title = request.form.get("title", "").strip()
+        description = request.form.get("description", "").strip()
+
+        if not title:
+            flash("Give it a title.", "error")
+        else:
+            db.create_feature_request(user["id"], user["username"], title, description)
+            flash("Request submitted - thanks!", "success")
+        return redirect(url_for("features"))
+
+    requests_list = db.get_all_feature_requests()
+    return render_template("features.html", requests=requests_list)
+
+
+@app.route("/account", methods=["GET", "POST"])
+@login_required
+def account():
+    user = current_user()
+    if request.method == "POST":
+        if not csrf_ok():
+            flash("That form expired - try again.", "error")
+            return redirect(url_for("account"))
+
+        action = request.form.get("action")
+
+        if action == "change_username":
+            new_username = request.form.get("new_username", "").strip()
+            current_password = request.form.get("current_password_u", "")
+
+            if not check_password_hash(user["password_hash"], current_password):
+                flash("Current password is incorrect.", "error")
+            elif len(new_username) < 3:
+                flash("Username needs to be at least 3 characters.", "error")
+            elif db.get_user_by_username(new_username):
+                flash("That username's taken.", "error")
+            else:
+                db.update_username(user["id"], new_username)
+                flash("Username updated.", "success")
+
+        elif action == "change_password":
+            current_password = request.form.get("current_password_p", "")
+            new_password = request.form.get("new_password", "")
+            confirm_password = request.form.get("confirm_password", "")
+
+            if not check_password_hash(user["password_hash"], current_password):
+                flash("Current password is incorrect.", "error")
+            elif len(new_password) < 8:
+                flash("New password needs to be at least 8 characters.", "error")
+            elif new_password != confirm_password:
+                flash("Passwords don't match.", "error")
+            else:
+                db.update_password(user["id"], generate_password_hash(new_password))
+                flash("Password updated.", "success")
+
+        return redirect(url_for("account"))
+
+    return render_template("account.html")
+
+
+@app.route("/")
+def index():
+    roadmap = db.get_public_roadmap()
+    return render_template("index.html", roadmap=roadmap)
 
 if __name__ == "__main__":
     app.run(debug=True)
