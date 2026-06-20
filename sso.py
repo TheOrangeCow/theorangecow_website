@@ -10,7 +10,7 @@ TOKEN_MAX_AGE = 60
 CLIENTS = {
     "library": {
         "name": "Library",
-        "redirect_uri": "https://library.theorangecow.org/auth/cow/callback",
+        "redirect_uri": "https://library.theorangecow.org/cow/callback",
         "secret": os.environ.get("CLIENT_SECRET_LIBRARY", "dev-secret-library"),
     },
     "house-778": {
