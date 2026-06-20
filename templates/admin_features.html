@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Manage feature requests</h2>
+
+<table border="1" cellpadding="8">
+    <tr>
+        <th>Title</th>
+        <th>By</th>
+        <th>Submitted</th>
+        <th>Description</th>
+        <th>Status</th>
+    </tr>
+    {% for r in requests %}
+    <tr>
+        <td>{{ r["title"] }}</td>
+        <td>{{ r["username"] }}</td>
+        <td>{{ r["created_at"] }}</td>
+        <td>{{ r["description"] }}</td>
+        <td>
+            <form method="post" style="display:flex; gap:0.4rem; align-items:center;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="feature_id" value="{{ r['id'] }}">
+                <select name="status">
+                    {% for s in ["requested", "planned", "in_progress", "done", "declined"] %}
+                    <option value="{{ s }}" {% if r["status"]==s %}selected{% endif %}>{{ s.replace('_', ' ') }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Update</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

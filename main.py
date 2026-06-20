@@ -227,6 +227,40 @@ def account():
 
     return render_template("account.html")
 
+def admin_required(f):
+    from functools import wraps
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        user = current_user()
+        if not user or user["username"] != "theorangecow":
+            return redirect(url_for("index"))
+        return f(*args, **kwargs)
+    return wrapper
+
+
+@app.route("/admin/features", methods=["GET", "POST"])
+@admin_required
+def admin_features():
+    if request.method == "POST":
+        if not csrf_ok():
+            flash("That form expired - try again.", "error")
+            return redirect(url_for("admin_features"))
+
+        feature_id = request.form.get("feature_id")
+        new_status = request.form.get("status")
+
+        valid_statuses = {"requested", "planned", "in_progress", "done", "declined"}
+        if feature_id and new_status in valid_statuses:
+            db.update_feature_status(int(feature_id), new_status)
+            flash("Status updated.", "success")
+        else:
+            flash("Invalid status.", "error")
+
+        return redirect(url_for("admin_features"))
+
+    requests_list = db.get_all_feature_requests()
+    return render_template("admin_features.html", requests=requests_list)
+
 
 @app.route("/")
 def index():
