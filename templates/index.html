@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orange Cow — TheOrangeCow</title>
+    <title>Orange Cow - TheOrangeCow</title>
     <meta name="description"
-        content="Developer portfolio for TheOrangeCow — House-778, Library, Brain Wave, Cow Servers, and live GitHub stats.">
+        content="Developer portfolio for TheOrangeCow - House-778, Library, Brain Wave, Cow Servers, and live GitHub stats.">
     <link rel="icon" href="data:,">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
@@ -105,7 +105,6 @@
             display: inline-block;
         }
 
-        /* ---------- background texture ---------- */
         .grain {
             position: fixed;
             inset: 0;
@@ -127,7 +126,6 @@
             z-index: 0;
         }
 
-        /* ---------- nav ---------- */
         header.nav {
             position: fixed;
             top: 0;
@@ -265,7 +263,6 @@
             }
         }
 
-        /* ---------- hero ---------- */
         .hero {
             position: relative;
             z-index: 2;
@@ -417,7 +414,6 @@
             display: block;
         }
 
-        /* ---------- generic section ---------- */
         section {
             position: relative;
             z-index: 2;
@@ -467,7 +463,6 @@
             transform: translateY(0);
         }
 
-        /* ---------- about ---------- */
         .about-grid {
             display: grid;
             grid-template-columns: 1.3fr 1fr;
@@ -557,7 +552,6 @@
             background: var(--orange);
         }
 
-        /* ---------- projects: service table ---------- */
         .svc-table {
             border: 1px solid var(--line);
             border-radius: var(--radius);
@@ -716,7 +710,6 @@
             }
         }
 
-        /* ---------- stats ---------- */
         .stat-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -768,7 +761,6 @@
             color: var(--orange-soft);
         }
 
-        /* ---------- commits ---------- */
         .commit-list {
             border: 1px solid var(--line);
             border-radius: var(--radius);
@@ -837,7 +829,6 @@
             border-radius: var(--radius);
         }
 
-        /* ---------- footer ---------- */
         footer {
             position: relative;
             z-index: 2;
@@ -957,7 +948,7 @@
             <div class="wrap">
                 <div class="hero-top">
                     <p class="eyebrow" style="margin-bottom:0;">orange-cow:~$ whoami</p>
-                    <div class="uptime" id="uptimeBadge"><span class="dot"></span><span id="uptimeText">uptime —
+                    <div class="uptime" id="uptimeBadge"><span class="dot"></span><span id="uptimeText">uptime -
                             connecting…</span></div>
                 </div>
 
@@ -992,7 +983,7 @@
                             solutions to small problems. I like exploring new technologies, contributing to open source,
                             and turning odd ideas into things that actually run.</p>
                         <p class="muted">When I'm not at a keyboard, I'm usually automating something that didn't need
-                            automating, or fighting with a 3D printer. Not written with AI — that one's mine to claim.
+                            automating, or fighting with a 3D printer. Not written with AI - that one's mine to claim.
                         </p>
                     </div>
                     <div>
@@ -1042,7 +1033,7 @@
                         <span class="dot online"></span>
                         <div class="svc-name-col">
                             <p class="svc-name">House-778 <span class="svc-status-tag">online</span></p>
-                            <p class="svc-desc">A small PHP empire of clone sites — a Stack Overflow knockoff, a
+                            <p class="svc-desc">A small PHP empire of clone sites - a Stack Overflow knockoff, a
                                 W3Schools knockoff, a Wordle answer checker, a chat app, and an IT Crowd–themed football
                                 quotes page nobody asked for.</p>
                         </div>
@@ -1063,7 +1054,7 @@
                         <span class="dot online"></span>
                         <div class="svc-name-col">
                             <p class="svc-name">Library <span class="svc-status-tag">online</span></p>
-                            <p class="svc-desc">A Flask casino with real-time multiplayer over WebSockets — Pooheads,
+                            <p class="svc-desc">A Flask casino with real-time multiplayer over WebSockets - Pooheads,
                                 Sevens, Blackjack, Poker and Slots, plus chips, leaderboards and chat.</p>
                         </div>
                         <div class="svc-meta-col">
@@ -1143,7 +1134,7 @@
                         <p class="eyebrow">// github stats</p>
                         <h2 class="heading">pulled live, just now</h2>
                     </div>
-                    <p class="section-note">fetched straight from the GitHub API on page load — no caching, no faking.
+                    <p class="section-note">fetched straight from the GitHub API on page load - no caching, no faking.
                     </p>
                 </div>
 
@@ -1193,7 +1184,7 @@
     <footer id="contact">
         <div class="wrap">
             <p class="footer-cta">STILL<br><span class="o">BUILDING.</span></p>
-            <p class="footer-sub">No contact form here — the fastest way to reach me is GitHub. Open an issue, send a
+            <p class="footer-sub">No contact form here - the fastest way to reach me is GitHub. Open an issue, send a
                 follow, or just poke around the repos.</p>
 
             <div class="footer-cols">
@@ -1297,7 +1288,7 @@
                     countUp(document.getElementById("statRepos"), data.repos);
                     countUp(document.getElementById("statStars"), data.stars);
                     countUp(document.getElementById("statFollowers"), data.followers);
-                    document.getElementById("statLang").textContent = data.lang || "—";
+                    document.getElementById("statLang").textContent = data.lang || "-";
                 }
                 if ("IntersectionObserver" in window && !reducedMotion) {
                     var obs = new IntersectionObserver(function (entries) {
@@ -1349,7 +1340,7 @@
                                 stars += repo.stargazers_count || 0;
                                 if (repo.language) langCount[repo.language] = (langCount[repo.language] || 0) + 1;
                             });
-                            var topLang = "—";
+                            var topLang = "-";
                             var max = 0;
                             Object.keys(langCount).forEach(function (l) {
                                 if (langCount[l] > max) { max = langCount[l]; topLang = l; }
@@ -1376,12 +1367,12 @@
                 })
                 .catch(function (err) {
                     document.getElementById("statsFootNote").textContent =
-                        "github API didn't respond (probably rate-limited) — see the live profile instead.";
+                        "github API didn't respond (probably rate-limited) - see the live profile instead.";
                     ["statRepos", "statStars", "statFollowers"].forEach(function (id) {
-                        document.getElementById(id).textContent = "—";
+                        document.getElementById(id).textContent = "-";
                     });
-                    document.getElementById("statLang").textContent = "—";
-                    document.getElementById("uptimeText").textContent = "uptime — unavailable";
+                    document.getElementById("statLang").textContent = "-";
+                    document.getElementById("uptimeText").textContent = "uptime - unavailable";
                     document.querySelectorAll(".svc-live-stats").forEach(function (cell) {
                         cell.textContent = "stats unavailable";
                     });
@@ -1408,7 +1399,7 @@
 
                     var container = document.getElementById("commitContainer");
                     if (!commits.length) {
-                        container.innerHTML = '<div class="state-msg">no public pushes in recent activity — check the repos directly.</div>';
+                        container.innerHTML = '<div class="state-msg">no public pushes in recent activity - check the repos directly.</div>';
                         return;
                     }
 
@@ -1428,7 +1419,7 @@
                 })
                 .catch(function () {
                     document.getElementById("commitContainer").innerHTML =
-                        '<div class="state-msg">couldn\'t reach the GitHub API right now (likely rate-limited) — <a href="https://github.com/TheOrangeCow" target="_blank" rel="noopener" style="color:var(--orange-soft);">see activity on GitHub</a> instead.</div>';
+                        '<div class="state-msg">couldn\'t reach the GitHub API right now (likely rate-limited) - <a href="https://github.com/TheOrangeCow" target="_blank" rel="noopener" style="color:var(--orange-soft);">see activity on GitHub</a> instead.</div>';
                 });
 
             function escapeHtml(str) {
