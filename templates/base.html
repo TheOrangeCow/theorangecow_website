@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Orange Cow{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+  <div class="grain"></div>
+  <div class="glow"></div>
+
+  <header class="nav">
+    <div class="nav-inner">
+      <a href="{{ url_for('index') }}" class="logo">theorangecow<span class="dim">_</span><span
+          class="cursor"></span></a>
+      <div class="nav-right">
+        {% if current_user %}
+        <span class="nav-user">@{{ current_user.username }}</span>
+        <form action="{{ url_for('logout') }}" method="post" class="inline-form">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <button type="submit" class="btn-gh">log out</button>
+        </form>
+        {% else %}
+        <a class="btn-gh" href="{{ url_for('login') }}">log in</a>
+        <a class="btn-primary-sm" href="{{ url_for('signup') }}">sign up</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <main>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="wrap">
+      <div class="flash-stack">
+        {% for category, message in messages %}
+        <p class="flash flash-{{ category }}">{{ message }}</p>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+</body>
+
+</html>
