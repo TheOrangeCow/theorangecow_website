@@ -928,9 +928,19 @@
                 <a class="btn-gh" href="https://github.com/TheOrangeCow" target="_blank" rel="noopener">
                     github ↗
                 </a>
-                <a class="btn-gh" href="https://theorangecow.org/login" target="_blank" rel="noopener">
-                    Cow account ↗
-                </a>
+                {% if current_user and current_user["username"] != "" %}
+                    <a class="btn-gh" href="https://theorangecow.org/feature" target="_blank" rel="noopener">
+                        Feature Request ↗
+                    </a>
+                    <a class="btn-gh" href="https://theorangecow.org/account" target="_blank" rel="noopener">
+                        Cow Account ↗
+                    </a>
+                {% else %}
+                    <a class="btn-gh" href="https://theorangecow.org/login" target="_blank" rel="noopener">
+                        Cow Account ↗
+                    </a>
+                {% endif %}
+                
                 <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
                     <span></span><span></span><span></span>
                 </button>
