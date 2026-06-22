@@ -18,63 +18,64 @@
 	<div class="grain"></div>
 	<div class="glow"></div>
 
-    <header class="nav">
-        <div class="nav-inner">
-            <a href="https://theorangecow.org/#top" class="logo">theorangecow<span class="dim">_</span><span class="cursor"></span></a>
-            <nav class="links">
-                <a href="https://theorangecow.org/#about">about</a>
-                <a href="https://theorangecow.org/#projects">projects</a>
-                <a href="https://theorangecow.org/#stats">stats</a>
-                <a href="https://theorangecow.org/#commits">commits</a>
-                <a href="https://theorangecow.org/#contact">contact</a>
-            </nav>
-            <div id="nav-but" class="nav-right">
-                <a class="btn-gh" href="https://github.com/TheOrangeCow" target="_blank" rel="noopener">
-                    github ↗
-                </a>
-                {% if current_user and current_user["username"] != "" %}
-                <a class="btn-gh" href="https://theorangecow.org/features" rel="noopener">
-                    Feature Request ↗
-                </a>
-                <a class="btn-gh" href="https://theorangecow.org/account" rel="noopener">
-                    Cow Account ↗
-                </a>
-                {% else %}
-                <a class="btn-gh" href="https://theorangecow.org/login" rel="noopener">
-                    Cow Account ↗
-                </a>
-                {% endif %}
+	<header class="nav">
+		<div class="nav-inner">
+			<a href="https://theorangecow.org/#top" class="logo">theorangecow<span class="dim">_</span><span
+					class="cursor"></span></a>
+			<nav class="links">
+				<a href="https://theorangecow.org/#about">about</a>
+				<a href="https://theorangecow.org/#projects">projects</a>
+				<a href="https://theorangecow.org/#stats">stats</a>
+				<a href="https://theorangecow.org/#commits">commits</a>
+				<a href="https://theorangecow.org/#contact">contact</a>
+			</nav>
+			<div id="nav-but" class="nav-right">
+				<a class="btn-gh" href="https://github.com/TheOrangeCow" target="_blank" rel="noopener">
+					github ↗
+				</a>
+				{% if current_user and current_user["username"] != "" %}
+				<a class="btn-gh" href="https://theorangecow.org/features" rel="noopener">
+					Feature Request ↗
+				</a>
+				<a class="btn-gh" href="https://theorangecow.org/account" rel="noopener">
+					Cow Account ↗
+				</a>
+				{% else %}
+				<a class="btn-gh" href="https://theorangecow.org/login" rel="noopener">
+					Cow Account ↗
+				</a>
+				{% endif %}
 
-            </div>
-            <div class="nav-right">
-                <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
-                    <span></span><span></span><span></span>
-                </button>
-            </div>
-        </div>
-        <div class="mobile-links" id="mobileLinks">
-            <a href="https://theorangecow.org/#about">about</a>
-            <a href="https://theorangecow.org/#projects">projects</a>
-            <a href="https://theorangecow.org/#stats">stats</a>
-            <a href="https://theorangecow.org/#commits">commits</a>
-            <a href="https://theorangecow.org/#contact">contact</a>
-            <a href="https://github.com/TheOrangeCow" target="_blank" rel="noopener">
-                github ↗
-            </a>
-            {% if current_user and current_user["username"] != "" %}
-            <a href="https://theorangecow.org/features" rel="noopener">
-                Feature Request ↗
-            </a>
-            <a href="https://theorangecow.org/account" rel="noopener">
-                Cow Account ↗
-            </a>
-            {% else %}
-            <a href="https://theorangecow.org/login" rel="noopener">
-                Cow Account ↗
-            </a>
-            {% endif %}
-        </div>
-    </header>
+			</div>
+			<div class="nav-right">
+				<button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
+					<span></span><span></span><span></span>
+				</button>
+			</div>
+		</div>
+		<div class="mobile-links" id="mobileLinks">
+			<a href="https://theorangecow.org/#about">about</a>
+			<a href="https://theorangecow.org/#projects">projects</a>
+			<a href="https://theorangecow.org/#stats">stats</a>
+			<a href="https://theorangecow.org/#commits">commits</a>
+			<a href="https://theorangecow.org/#contact">contact</a>
+			<a href="https://github.com/TheOrangeCow" target="_blank" rel="noopener">
+				github ↗
+			</a>
+			{% if current_user and current_user["username"] != "" %}
+			<a href="https://theorangecow.org/features" rel="noopener">
+				Feature Request ↗
+			</a>
+			<a href="https://theorangecow.org/account" rel="noopener">
+				Cow Account ↗
+			</a>
+			{% else %}
+			<a href="https://theorangecow.org/login" rel="noopener">
+				Cow Account ↗
+			</a>
+			{% endif %}
+		</div>
+	</header>
 
 	<main class="wrap">
 		{% with messages = get_flashed_messages(with_categories=true) %}
@@ -92,6 +93,50 @@
 		{% block content %}{% endblock %}
 	</main>
 
+	<footer id="contact">
+		<div class="wrap">
+			<p class="footer-cta">STILL<br><span class="o">BUILDING.</span></p>
+			<p class="footer-sub">No contact form here - the fastest way to reach me is GitHub. Open an issue, send a
+				follow, or just poke around the repos.</p>
+
+			<div class="footer-cols">
+				<div class="footer-col">
+					<p class="footer-col-title">sites</p>
+					<a href="https://theorangecow.org" target="_blank" rel="noopener">theorangecow.org</a>
+					<a href="https://house-778.theorangecow.org" target="_blank" rel="noopener">house-778</a>
+					<a href="https://library.theorangecow.org" target="_blank" rel="noopener">library</a>
+					<a href="https://brainwave.theorangecow.org" target="_blank" rel="noopener">brain wave</a>
+					<a href="https://cow-servers.theorangecow.org" target="_blank" rel="noopener">cow servers</a>
+				</div>
+				<div class="footer-col">
+					<p class="footer-col-title">code</p>
+					<a href="https://github.com/TheOrangeCow" target="_blank" rel="noopener">github profile</a>
+					<a href="https://github.com/TheOrangeCow/house-778" target="_blank" rel="noopener">house-778
+						repo</a>
+					<a href="https://github.com/TheOrangeCow/library" target="_blank" rel="noopener">library repo</a>
+					<a href="https://github.com/TheOrangeCow/Brain-Wave" target="_blank" rel="noopener">brain wave
+						repo</a>
+					<a href="https://github.com/TheOrangeCow/cow_servers" target="_blank" rel="noopener">cow_servers
+						repo</a>
+				</div>
+				<div class="footer-col">
+					<p class="footer-col-title">section</p>
+					<a href="#about">about</a>
+					<a href="#projects">projects</a>
+					<a href="#stats">stats</a>
+					<a href="#commits">commits</a>
+					<a href="#contact">contact</a>
+				</div>
+			</div>
+
+			<div class="footer-bottom">
+				<span>© 2026 The Orange Cow. Built with too many tabs open.</span>
+				<span class="moo">// moo</span>
+			</div>
+		</div>
+	</footer>
+
 </body>
 <script src="/static/script.js"></script>
+
 </html>
