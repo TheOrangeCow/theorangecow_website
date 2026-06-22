@@ -940,7 +940,7 @@
                     Cow Account ↗
                 </a>
                 {% else %}
-                <a class="btn-gh" href="https://theorangecow.org/login"  rel="noopener">
+                <a class="btn-gh" href="https://theorangecow.org/login" rel="noopener">
                     Cow Account ↗
                 </a>
                 {% endif %}
@@ -1225,22 +1225,26 @@
                 <div class="section-head">
                     <div>
                         <p class="eyebrow">// features suggested</p>
-                        <h2 class="heading">comming soon</h2>
+                        <h2 class="heading">coming soon</h2>
                     </div>
                     <p class="section-note">to make a suggestion please make a cow account.</p>
                 </div>
 
                 <div class="svc-table">
                     {% for item in roadmap %}
-                    <article class="svc-row" data-status="online">
+                    <article class="svc-row" data-status="dev">
+                        <span class="dot dev"></span>
                         <div class="svc-name-col">
-                            <p class="svc-name">{{ item["title"] }} <span class="svc-status-tag">{{ item["status"].replace('_', ' ') }}</span></p>
+                            <p class="svc-name">{{ item["title"] }} <span class="svc-status-tag">{{
+                                    item["status"].replace('_', ' ') }}</span></p>
                             {% if item["description"] %}<p class="svc-desc">{{ item["description"] }}</p>{% endif %}
                         </div>
+                        <div class="svc-meta-col"></div>
+                        <div class="svc-actions"></div>
                     </article>
                     {% endfor %}
                 </div>
-            
+            </div>
         </section>
         {% endif %}
 
