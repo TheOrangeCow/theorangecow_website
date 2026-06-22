@@ -164,6 +164,9 @@ def login_required(f):
 def features():
     user = current_user()
 
+    if user == "theorangecow":
+        admin = True
+
     if request.method == "POST":
         if not csrf_ok():
             flash("That form expired - try again.", "error")
@@ -180,7 +183,7 @@ def features():
         return redirect(url_for("features"))
 
     requests_list = db.get_all_feature_requests()
-    return render_template("features.html", requests=requests_list)
+    return render_template("features.html", requests=requests_list, admin=admin)
 
 
 @app.route("/account", methods=["GET", "POST"])
@@ -250,9 +253,14 @@ def admin_features():
         new_status = request.form.get("status")
 
         valid_statuses = {"requested", "planned", "in_progress", "done", "declined"}
+
         if feature_id and new_status in valid_statuses:
-            db.update_feature_status(int(feature_id), new_status)
-            flash("Status updated.", "success")
+            if new_status == "declined":
+                db.delete_feature_request(int(feature_id))
+                flash("Feature request declined and deleted.", "success")
+            else:
+                db.update_feature_status(int(feature_id), new_status)
+                flash("Status updated.", "success")
         else:
             flash("Invalid status.", "error")
 

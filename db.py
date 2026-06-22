@@ -92,6 +92,15 @@ def get_public_roadmap():
     conn.close()
     return rows
 
+def delete_feature_request(feature_id):
+    conn = get_db()
+    conn.execute(
+        "DELETE FROM feature_requests WHERE id = ?",
+        (feature_id,)
+    )
+    conn.commit()
+    conn.close()
+
 
 def update_feature_status(feature_id, status):
     conn = get_db()
