@@ -2,7 +2,7 @@
 {% block content %}
 <h2>Manage feature requests</h2>
 
-<table border="1" cellpadding="8">
+<table class="admin-table">
     <tr>
         <th>Title</th>
         <th>By</th>
@@ -17,7 +17,7 @@
         <td>{{ r["created_at"] }}</td>
         <td>{{ r["description"] }}</td>
         <td>
-            <form method="post" style="display:flex; gap:0.4rem; align-items:center;">
+            <form method="post" class="admin-actions">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                 <input type="hidden" name="feature_id" value="{{ r['id'] }}">
                 <select name="status">
