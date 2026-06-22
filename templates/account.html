@@ -1,28 +1,42 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Account settings</h2>
 
-<h3>Change username</h3>
-<form method="post">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-    <input type="hidden" name="action" value="change_username">
-    <label>New username</label>
-    <input type="text" name="new_username" required>
-    <label>Current password</label>
-    <input type="password" name="current_password_u" required>
-    <button type="submit">Update username</button>
-</form>
 
-<h3>Change password</h3>
-<form method="post">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-    <input type="hidden" name="action" value="change_password">
-    <label>Current password</label>
-    <input type="password" name="current_password_p" required>
-    <label>New password</label>
-    <input type="password" name="new_password" required>
-    <label>Confirm new password</label>
-    <input type="password" name="confirm_password" required>
-    <button type="submit">Update password</button>
-</form>
+
+
+
+
+<div class="account-grid">
+    <h2>Account settings</h2>
+    <div class="account-card">
+        <h3>Change username</h3>
+
+        <form method="post" class="form-stack">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <input type="hidden" name="action" value="change_username">
+            <label>New username</label>
+            <input type="text" name="new_username" required>
+            <label>Current password</label>
+            <input type="password" name="current_password_u" required>
+            <button class="btn-primary" type="submit">Update username</button>
+        </form>
+    </div>
+
+    <div class="account-card">
+        <h3>Change password</h3>
+
+        <form method="post" class="form-stack">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <input type="hidden" name="action" value="change_password">
+            <label>Current password</label>
+            <input type="password" name="current_password_p" required>
+            <label>New password</label>
+            <input type="password" name="new_password" required>
+            <label>Confirm new password</label>
+            <input type="password" name="confirm_password" required>
+            <button class="btn-primary" type="submit">Update password</button>
+        </form>
+    </div>
+
+</div>
 {% endblock %}
