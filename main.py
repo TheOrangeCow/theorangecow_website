@@ -166,6 +166,8 @@ def features():
 
     if user == "theorangecow":
         admin = True
+    else:
+        admin = False
 
     if request.method == "POST":
         if not csrf_ok():
