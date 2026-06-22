@@ -2,56 +2,95 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}Orange Cow{% endblock %}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="icon" href="/static/icon.ico">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{% block title %}Orange Cow{% endblock %}</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="icon" href="/static/icon.ico">
+	<link
+		href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+		rel="stylesheet">
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
-  <div class="grain"></div>
-  <div class="glow"></div>
+	<div class="grain"></div>
+	<div class="glow"></div>
 
-  <header class="nav">
-    <div class="nav-inner">
-      <a href="{{ url_for('index') }}" class="logo">theorangecow<span class="dim">_</span><span
-          class="cursor"></span></a>
-      <div class="nav-right">
-        {% if current_user %}
-        <span class="nav-user">@{{ current_user.username }}</span>
-        <form action="{{ url_for('logout') }}" method="post" class="inline-form">
-          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-          <button type="submit" class="btn-gh">log out</button>
-        </form>
-        {% else %}
-        <a class="btn-gh" href="{{ url_for('login') }}">log in</a>
-        <a class="btn-primary-sm" href="{{ url_for('signup') }}">sign up</a>
-        {% endif %}
-      </div>
-    </div>
-  </header>
+    <header class="nav">
+        <div class="nav-inner">
+            <a href="#top" class="logo">theorangecow<span class="dim">_</span><span class="cursor"></span></a>
+            <nav class="links">
+                <a href="#about">about</a>
+                <a href="#projects">projects</a>
+                <a href="#stats">stats</a>
+                <a href="#commits">commits</a>
+                <a href="#contact">contact</a>
+            </nav>
+            <div id="nav-but" class="nav-right">
+                <a class="btn-gh" href="https://github.com/TheOrangeCow" target="_blank" rel="noopener">
+                    github ↗
+                </a>
+                {% if current_user and current_user["username"] != "" %}
+                <a class="btn-gh" href="https://theorangecow.org/features" rel="noopener">
+                    Feature Request ↗
+                </a>
+                <a class="btn-gh" href="https://theorangecow.org/account" rel="noopener">
+                    Cow Account ↗
+                </a>
+                {% else %}
+                <a class="btn-gh" href="https://theorangecow.org/login" rel="noopener">
+                    Cow Account ↗
+                </a>
+                {% endif %}
 
-  <main>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-    <div class="wrap">
-      <div class="flash-stack">
-        {% for category, message in messages %}
-        <p class="flash flash-{{ category }}">{{ message }}</p>
-        {% endfor %}
-      </div>
-    </div>
-    {% endif %}
-    {% endwith %}
+            </div>
+            <div class="nav-right">
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+        <div class="mobile-links" id="mobileLinks">
+            <a href="#about">about</a>
+            <a href="#projects">projects</a>
+            <a href="#stats">stats</a>
+            <a href="#commits">commits</a>
+            <a href="#contact">contact</a>
+            <a href="https://github.com/TheOrangeCow" target="_blank" rel="noopener">
+                github ↗
+            </a>
+            {% if current_user and current_user["username"] != "" %}
+            <a href="https://theorangecow.org/features" rel="noopener">
+                Feature Request ↗
+            </a>
+            <a href="https://theorangecow.org/account" rel="noopener">
+                Cow Account ↗
+            </a>
+            {% else %}
+            <a href="https://theorangecow.org/login" rel="noopener">
+                Cow Account ↗
+            </a>
+            {% endif %}
+        </div>
+    </header>
 
-    {% block content %}{% endblock %}
-  </main>
+	<main>
+		{% with messages = get_flashed_messages(with_categories=true) %}
+		{% if messages %}
+		<div class="wrap">
+			<div class="flash-stack">
+				{% for category, message in messages %}
+				<p class="flash flash-{{ category }}">{{ message }}</p>
+				{% endfor %}
+			</div>
+		</div>
+		{% endif %}
+		{% endwith %}
+
+		{% block content %}{% endblock %}
+	</main>
 
 </body>
 
