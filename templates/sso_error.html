@@ -2,13 +2,13 @@
 {% block title %}Can't sign you in - Orange Cow{% endblock %}
 {% block content %}
 <div class="wrap auth-wrap">
-  <p class="eyebrow">// sso error</p>
-  <div class="auth-card">
-    <p class="auth-error-text">
-      This site isn't registered to use "Login with Cow" yet, or its redirect address doesn't
-      match what's on file. Nothing was shared with it.
-    </p>
-    <a href="{{ url_for('index') }}" class="btn-secondary full">back home</a>
-  </div>
+    <p class="eyebrow">// sso error</p>
+    <div class="auth-card">
+        <p class="auth-error-text">
+            This site isn't registered to use "Login with Cow" yet, or its redirect address doesn't
+            match what's on file. Nothing was shared with it.
+        </p>
+        <a href="{{ url_for('index') }}" class="btn-secondary full">back home</a>
+    </div>
 </div>
 {% endblock %}

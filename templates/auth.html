@@ -2,47 +2,49 @@
 {% block title %}{{ "Log in" if mode == "login" else "Sign up" }} - Orange Cow{% endblock %}
 {% block content %}
 <div class="wrap auth-wrap">
-  <p class="eyebrow">// {{ "login" if mode == "login" else "signup" }}</p>
+    <p class="eyebrow">// {{ "login" if mode == "login" else "signup" }}</p>
 
-  <div class="auth-card">
-    <div class="auth-tabs">
-      <a href="{{ url_for('login', next=next) }}" class="auth-tab {{ 'active' if mode == 'login' else '' }}">log in</a>
-      <a href="{{ url_for('signup', next=next) }}" class="auth-tab {{ 'active' if mode == 'signup' else '' }}">sign
-        up</a>
+    <div class="auth-card">
+        <div class="auth-tabs">
+            <a href="{{ url_for('login', next=next) }}" class="auth-tab {{ 'active' if mode == 'login' else '' }}">log
+                in</a>
+            <a href="{{ url_for('signup', next=next) }}"
+                class="auth-tab {{ 'active' if mode == 'signup' else '' }}">sign
+                up</a>
+        </div>
+
+        {% if mode == "login" %}
+        <form method="post" action="{{ url_for('login') }}" class="auth-form">
+            <input type="hidden" name="next" value="{{ next }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <label>username
+                <input type="text" name="username" autocomplete="username" required autofocus>
+            </label>
+            <label>password
+                <input type="password" name="password" autocomplete="current-password" required>
+            </label>
+            <button type="submit" class="btn-primary full">log in</button>
+        </form>
+        {% else %}
+        <form method="post" action="{{ url_for('signup') }}" class="auth-form">
+            <input type="hidden" name="next" value="{{ next }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <label>username
+                <input type="text" name="username" autocomplete="username" required autofocus minlength="3">
+            </label>
+            <label>password
+                <input type="password" name="password" autocomplete="new-password" required minlength="8">
+            </label>
+            <label>confirm password
+                <input type="password" name="confirm" autocomplete="new-password" required minlength="8">
+            </label>
+            <button type="submit" class="btn-primary full">create account</button>
+        </form>
+        {% endif %}
+
+        {% if next and next != '/' %}
+        <p class="auth-hint">// signing in to continue to another Orange Cow site</p>
+        {% endif %}
     </div>
-
-    {% if mode == "login" %}
-    <form method="post" action="{{ url_for('login') }}" class="auth-form">
-      <input type="hidden" name="next" value="{{ next }}">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-      <label>username
-        <input type="text" name="username" autocomplete="username" required autofocus>
-      </label>
-      <label>password
-        <input type="password" name="password" autocomplete="current-password" required>
-      </label>
-      <button type="submit" class="btn-primary full">log in</button>
-    </form>
-    {% else %}
-    <form method="post" action="{{ url_for('signup') }}" class="auth-form">
-      <input type="hidden" name="next" value="{{ next }}">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-      <label>username
-        <input type="text" name="username" autocomplete="username" required autofocus minlength="3">
-      </label>
-      <label>password
-        <input type="password" name="password" autocomplete="new-password" required minlength="8">
-      </label>
-      <label>confirm password
-        <input type="password" name="confirm" autocomplete="new-password" required minlength="8">
-      </label>
-      <button type="submit" class="btn-primary full">create account</button>
-    </form>
-    {% endif %}
-
-    {% if next and next != '/' %}
-    <p class="auth-hint">// signing in to continue to another Orange Cow site</p>
-    {% endif %}
-  </div>
 </div>
 {% endblock %}
