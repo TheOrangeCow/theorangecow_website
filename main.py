@@ -277,5 +277,10 @@ def index():
     roadmap = db.get_public_roadmap()
     return render_template("index.html", roadmap=roadmap)
 
+
+@app.route("/library")
+def index():
+    return render_template("index.html")
+
 if __name__ == "__main__":
     app.run(debug=True)
