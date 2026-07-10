@@ -1,61 +1,312 @@
 {% extends "base.html" %}
 {% block content %}
+
 <br><br><br><br>
 
 <section class="hero" id="top">
     <div class="wrap">
+
         <div class="hero-top">
-            <p class="eyebrow" style="margin-bottom:0;">orange-cow:~$ whoami</p>
+            <p class="eyebrow" style="margin-bottom:0;">library:~$ status</p>
         </div>
 
         <h1 class="title">THE<br><span class="line2">LIBRARY.</span></h1>
 
-        <p class="hero-sub">card games · gambling <span class="blinker"></span></p>
+        <p class="hero-sub">
+            multiplayer games · cards · chaos
+            <span class="blinker"></span>
+        </p>
 
-        <p class="hero-bio">it is a all in one gambling website with pooheads, sevens, black jack, poker, white jack,
-            crash, enraged pooheads and more. it is also being activity developed and expanding it games range. </p>
+        <p class="hero-bio">
+            Library is an open source multiplayer gaming platform built around classic card games.
+            It combines real-time gameplay, accounts, leaderboards, chat, and constantly expanding games
+            into one place.
+        </p>
 
         <div class="hero-actions">
-            <a href="https://library.theorangecow.org" class="btn-primary">see it running →</a>
-            <a href="https://github.com/TheOrangeCow/library" target="_blank" rel="noopener" class="btn-secondary">view
-                source on GitHub</a>
+
+            <a href="https://library.theorangecow.org" class="btn-primary">
+                see it running →
+            </a>
+
+            <a href="https://github.com/TheOrangeCow/library" target="_blank" class="btn-secondary">
+                view source on GitHub
+            </a>
+
             <span class="avatar-chip">
-                <img src="https://avatars.githubusercontent.com/u/138312355?v=4" alt="TheOrangeCow avatar"
-                    loading="lazy">
+                <img src="https://avatars.githubusercontent.com/u/138312355?v=4" loading="lazy">
                 @TheOrangeCow
             </span>
+
         </div>
+
     </div>
 </section>
 
+
 <section id="about" class="reveal">
+
     <div class="wrap">
+
         <p class="eyebrow">// about</p>
+
         <div class="about-grid">
+
             <div class="about-text">
-                <p>.......</p>
-                <p class="muted">.......
+
+                <p>
+                    Library started as a project to bring classic card games into a single
+                    self-hosted multiplayer platform. The goal was to create something that
+                    feels like a real online games platform while keeping the code open and
+                    customisable.
                 </p>
+
+                <p class="muted">
+                    It is actively developed with new games, features and improvements being
+                    added regularly.
+                </p>
+
             </div>
+
+
             <div>
+
                 <div class="panel">
-                    <p class="panel-label">best games i think</p>
+
+                    <p class="panel-label">
+                        featured games
+                    </p>
+
                     <div class="badge-row">
-                        <span class="badge"><span class="ic"></span>pooheads</span>
-                        <span class="badge"><span class="ic"></span>sevens</span>
+
+                        <span class="badge">
+                            <span class="ic"></span>
+                            Pooheads
+                        </span>
+
+                        <span class="badge">
+                            <span class="ic"></span>
+                            Sevens
+                        </span>
+
+                        <span class="badge">
+                            <span class="ic"></span>
+                            Poker
+                        </span>
+
                     </div>
+
                 </div>
+
+
                 <div class="panel">
-                    <p class="panel-label">ccoming soon</p>
+
+                    <p class="panel-label">
+                        technology
+                    </p>
+
                     <div class="chip-row">
-                        <span class="chip learning">egyptian rat screw </span>
-                        <span class="chip learning">cheet</span>
-                        <span class="chip learning">horse racing</span>
-                        <span class="chip learning">happy families</span>
+
+                        <span class="chip">Python</span>
+                        <span class="chip">Flask</span>
+                        <span class="chip">Socket.IO</span>
+                        <span class="chip">JavaScript</span>
+                        <span class="chip">HTML</span>
+                        <span class="chip">CSS</span>
+
                     </div>
+
                 </div>
+
+
+                <div class="panel">
+
+                    <p class="panel-label">
+                        coming soon
+                    </p>
+
+                    <div class="chip-row">
+
+                        <span class="chip learning">
+                            Egyptian Rat Screw
+                        </span>
+
+                        <span class="chip learning">
+                            Horse Racing
+                        </span>
+
+                        <span class="chip learning">
+                            Happy Families
+                        </span>
+
+                    </div>
+
+                </div>
+
+
             </div>
+
         </div>
+
     </div>
+
 </section>
+
+
+<section class="reveal">
+
+    <div class="wrap">
+
+        <div class="section-head">
+
+            <div>
+
+                <p class="eyebrow">// features</p>
+
+                <h2 class="heading">
+                    what it does
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="svc-table">
+
+
+            <article class="svc-row">
+
+                <span class="dot online"></span>
+
+                <div class="svc-name-col">
+
+                    <p class="svc-name">
+                        Real-time multiplayer
+                    </p>
+
+                    <p class="svc-desc">
+                        Games use WebSocket communication allowing players to interact instantly.
+                    </p>
+
+                </div>
+
+            </article>
+
+
+            <article class="svc-row">
+
+                <span class="dot online"></span>
+
+                <div class="svc-name-col">
+
+                    <p class="svc-name">
+                        Accounts and progress
+                    </p>
+
+                    <p class="svc-desc">
+                        Players can have accounts, track progress, and compete on leaderboards.
+                    </p>
+
+                </div>
+
+            </article>
+
+
+            <article class="svc-row">
+
+                <span class="dot online"></span>
+
+                <div class="svc-name-col">
+
+                    <p class="svc-name">
+                        Multiple games
+                    </p>
+
+                    <p class="svc-desc">
+                        A growing collection of multiplayer card games in one platform.
+                    </p>
+
+                </div>
+
+            </article>
+
+
+            <article class="svc-row">
+
+                <span class="dot online"></span>
+
+                <div class="svc-name-col">
+
+                    <p class="svc-name">
+                        Self hosted
+                    </p>
+
+                    <p class="svc-desc">
+                        Anyone can run their own copy and customise it.
+                    </p>
+
+                </div>
+
+            </article>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="reveal">
+
+    <div class="wrap">
+
+        <p class="eyebrow">// games</p>
+
+        <h2 class="heading">
+            available now
+        </h2>
+
+
+        <div class="chip-row">
+
+            <span class="chip">Pooheads</span>
+            <span class="chip">Sevens</span>
+            <span class="chip">Blackjack</span>
+            <span class="chip">Poker</span>
+            <span class="chip">White Jack</span>
+            <span class="chip">Crash</span>
+            <span class="chip">Enraged Pooheads</span>
+            <span class="chip learning">More coming</span>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <div class="wrap">
+
+        <p class="footer-cta">
+            PLAY.<br>
+            <span class="o">
+                BUILD.
+            </span>
+        </p>
+
+        <p class="footer-sub">
+            Library is open source. Run your own server, add games,
+            and make it your own.
+        </p>
+
+    </div>
+
+</footer>
+
+
 {% endblock %}
