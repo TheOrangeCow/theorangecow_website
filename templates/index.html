@@ -200,7 +200,6 @@
                                 updated <span class="updated">…</span></div>
                         </div>
                         <div class="svc-actions">
-                            <a href="https://theorangecow.org/library">project page ↗</a>
                             <a href="https://library.theorangecow.org" target="_blank" rel="noopener"
                                 class="primary">visit ↗</a>
                             <a href="https://github.com/TheOrangeCow/library" target="_blank" rel="noopener">code ↗</a>
@@ -656,18 +655,15 @@
                 not_monitored: { label: "unknown",     cls: "dev",     color: "#888" }
             };
 
-            // strips everything except a-z0-9 so "Cow Servers", "Cow-Servers", "cow.servers"
-            // all normalize to the same string before we compare
             function normalize(str) {
                 return String(str || "").toLowerCase().replace(/[^a-z0-9]/g, "");
             }
 
-            // maps our internal row keys to a normalized substring findable in the Better Stack public_name
             var MATCHERS = {
                 house:      "house",
                 library:    "librar",
-                cowfun:     "cowfun",
-                brainwave:  "rianwave", // covers both "Brainwave" and the "Brianwave" typo on the status page
+                cowfun:     "fun",
+                brainwave:  "brainwave",
                 cowservers: "cowserver"
             };
 
