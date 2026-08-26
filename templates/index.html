@@ -166,10 +166,10 @@
 
                 <div class="svc-table">
 
-                    <article class="svc-row" data-status="online">
+                    <article class="svc-row" data-status="online" data-monitor="house">
                         <span class="dot online"></span>
                         <div class="svc-name-col">
-                            <p class="svc-name">House-778 <span class="svc-status-tag">online</span></p>
+                            <p class="svc-name">House-778 <span class="svc-status-tag">checking…</span></p>
                             <p class="svc-desc">A small PHP empire of clone sites - a Stack Overflow knockoff, a
                                 W3Schools knockoff, a Wordle answer checker, a chat app, and an IT Crowd–themed football
                                 quotes page nobody asked for.</p>
@@ -187,10 +187,10 @@
                         </div>
                     </article>
 
-                    <article class="svc-row" data-status="online">
+                    <article class="svc-row" data-status="online" data-monitor="library">
                         <span class="dot online"></span>
                         <div class="svc-name-col">
-                            <p class="svc-name">Library <span class="svc-status-tag">online</span></p>
+                            <p class="svc-name">Library <span class="svc-status-tag">checking…</span></p>
                             <p class="svc-desc">A Flask casino with real-time multiplayer over WebSockets - Pooheads,
                                 Sevens, Blackjack, Poker and Slots, plus chips, leaderboards and chat.</p>
                         </div>
@@ -207,10 +207,10 @@
                         </div>
                     </article>
 
-                    <article class="svc-row" data-status="dev">
+                    <article class="svc-row" data-status="dev" data-monitor="cowservers">
                         <span class="dot dev"></span>
                         <div class="svc-name-col">
-                            <p class="svc-name">Cow Servers <span class="svc-status-tag">Temporary offline</span></p>
+                            <p class="svc-name">Cow Servers <span class="svc-status-tag">checking…</span></p>
                             <p class="svc-desc">Runs several Python socket servers behind a single port, with a Flask
                                 dashboard to keep them in line. The infrastructure this whole site's spirit is named
                                 after.</p>
@@ -228,10 +228,10 @@
                         </div>
                     </article>
 
-                    <article class="svc-row" data-status="online">
+                    <article class="svc-row" data-status="online" data-monitor="brainwave">
                         <span class="dot online"></span>
                         <div class="svc-name-col">
-                            <p class="svc-name">Brain Wave <span class="svc-status-tag">online</span></p>
+                            <p class="svc-name">Brain Wave <span class="svc-status-tag">checking…</span></p>
                             <p class="svc-desc">Paste a YouTube link and get a summary, quiz, flashcards, mindmap and
                                 exam questions
                                 generated from the transcript - plus exam timetable scanning and a tool that marks your
@@ -251,15 +251,15 @@
                         </div>
                     </article>
 
-                    <article class="svc-row" data-status="dev">
+                    <article class="svc-row" data-status="dev" data-monitor="cowfun">
                         <span class="dot dev"></span>
                         <div class="svc-name-col">
-                            <p class="svc-name">cow.fun <span class="svc-status-tag">Offline</span></p>
-                            <p class="svc-desc"></p>
+                            <p class="svc-name">cow.fun <span class="svc-status-tag">checking…</span></p>
+                            <p class="svc-desc">A small Flask project still under construction - check back soon.</p>
                         </div>
                         <div class="svc-meta-col">
                             <div class="svc-stack"><span>Python</span><span>Flask</span></div>
-                            <div class="svc-live-stats" data-repo="Brain-Wave">★ <span class="stars">…</span>
+                            <div class="svc-live-stats" data-repo="cow.fun">★ <span class="stars">…</span>
                                 &nbsp;·&nbsp; updated <span class="updated">…</span></div>
                         </div>
                         <div class="svc-actions">
@@ -641,6 +641,66 @@
                 return div.innerHTML;
             }
 
+        })();
+    </script>
+
+    <script>
+        (function () {
+            "use strict";
+
+            var STATUS_META = {
+                operational:   { label: "online",      cls: "online",  color: "#3ecf6e" },
+                degraded:      { label: "degraded",    cls: "dev",     color: "#f5a623" },
+                maintenance:   { label: "maintenance", cls: "dev",     color: "#f5a623" },
+                downtime:      { label: "offline",     cls: "offline", color: "#e5484d" },
+                not_monitored: { label: "unknown",     cls: "dev",     color: "#888" }
+            };
+
+            // maps our internal row keys to something findable in the Better Stack public_name
+            var MATCHERS = {
+                house:      function (n) { return n.indexOf("house") > -1; },
+                library:    function (n) { return n.indexOf("librar") > -1; },
+                cowfun:     function (n) { return n.indexOf("cow.fun") > -1 || n.indexOf("cow fun") > -1; },
+                brainwave:  function (n) { return n.indexOf("brian") > -1 || n.indexOf("brain") > -1; },
+                cowservers: function (n) { return n.indexOf("cow server") > -1; }
+            };
+
+            fetch("https://status.theorangecow.org/index.json")
+                .then(function (r) { if (!r.ok) throw new Error("status fetch failed"); return r.json(); })
+                .then(function (data) {
+                    var resources = (data.included || []).filter(function (i) { return i.type === "status_page_resource"; });
+
+                    Object.keys(MATCHERS).forEach(function (key) {
+                        var match = resources.find(function (res) {
+                            return MATCHERS[key](res.attributes.public_name.toLowerCase());
+                        });
+                        var row = document.querySelector('.svc-row[data-monitor="' + key + '"]');
+                        if (!row) return;
+
+                        var status = match && match.attributes.status
+                            ? String(match.attributes.status).toLowerCase().trim()
+                            : "not_monitored";
+                        var meta = STATUS_META[status] || STATUS_META.not_monitored;
+
+                        if (!STATUS_META[status]) {
+                            console.warn('Unrecognized Better Stack status "' + status + '" for monitor "' + key + '" - treating as unknown. Raw resource:', match);
+                        }
+
+                        row.setAttribute("data-status", meta.cls);
+
+                        var dot = row.querySelector(".dot");
+                        if (dot) { dot.className = "dot " + meta.cls; dot.style.background = meta.color; }
+
+                        var tag = row.querySelector(".svc-status-tag");
+                        if (tag) { tag.textContent = meta.label; tag.style.color = meta.color; }
+                    });
+                })
+                .catch(function (err) {
+                    console.error("Could not load service statuses:", err);
+                    document.querySelectorAll(".svc-status-tag").forEach(function (tag) {
+                        if (tag.textContent === "checking…") tag.textContent = "status unavailable";
+                    });
+                });
         })();
     </script>
 
