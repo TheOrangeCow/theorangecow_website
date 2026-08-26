@@ -656,13 +656,19 @@
                 not_monitored: { label: "unknown",     cls: "dev",     color: "#888" }
             };
 
-            // maps our internal row keys to something findable in the Better Stack public_name
+            // strips everything except a-z0-9 so "Cow Servers", "Cow-Servers", "cow.servers"
+            // all normalize to the same string before we compare
+            function normalize(str) {
+                return String(str || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+            }
+
+            // maps our internal row keys to a normalized substring findable in the Better Stack public_name
             var MATCHERS = {
-                house:      function (n) { return n.indexOf("house") > -1; },
-                library:    function (n) { return n.indexOf("librar") > -1; },
-                cowfun:     function (n) { return n.indexOf("cow.fun") > -1 || n.indexOf("cow fun") > -1; },
-                brainwave:  function (n) { return n.indexOf("brian") > -1 || n.indexOf("brain") > -1; },
-                cowservers: function (n) { return n.indexOf("cow server") > -1; }
+                house:      "house",
+                library:    "librar",
+                cowfun:     "cowfun",
+                brainwave:  "rianwave", // covers both "Brainwave" and the "Brianwave" typo on the status page
+                cowservers: "cowserver"
             };
 
             fetch("https://status.theorangecow.org/index.json")
@@ -670,12 +676,21 @@
                 .then(function (data) {
                     var resources = (data.included || []).filter(function (i) { return i.type === "status_page_resource"; });
 
+                    console.log("Better Stack resources found:", resources.map(function (r) {
+                        return { public_name: r.attributes.public_name, status: r.attributes.status };
+                    }));
+
                     Object.keys(MATCHERS).forEach(function (key) {
+                        var needle = MATCHERS[key];
                         var match = resources.find(function (res) {
-                            return MATCHERS[key](res.attributes.public_name.toLowerCase());
+                            return normalize(res.attributes.public_name).indexOf(needle) > -1;
                         });
                         var row = document.querySelector('.svc-row[data-monitor="' + key + '"]');
                         if (!row) return;
+
+                        if (!match) {
+                            console.warn('No Better Stack resource matched monitor "' + key + '" (looked for "' + needle + '"). Check the resource list logged above.');
+                        }
 
                         var status = match && match.attributes.status
                             ? String(match.attributes.status).toLowerCase().trim()
