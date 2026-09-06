@@ -546,7 +546,7 @@
                 </div>
                 <div class="footer-col">
                     <p class="footer-col-title">top projects</p>
-                    
+
                 </div>
                 <div class="footer-col">
                     <p class="footer-col-title">section</p>
@@ -1342,6 +1342,151 @@
                         'couldn\'t reach GitHub right now.' +
                         '</div>';
 
+                });
+
+        })();
+    </script>
+
+    <script>
+        (function () {
+            "use strict";
+
+            var STATUS_META = {
+                operational: {
+                    label: "online",
+                    cls: "online",
+                    color: "#3ecf6e"
+                },
+                degraded: {
+                    label: "degraded",
+                    cls: "dev",
+                    color: "#f5a623"
+                },
+                maintenance: {
+                    label: "maintenance",
+                    cls: "dev",
+                    color: "#f5a623"
+                },
+                downtime: {
+                    label: "offline",
+                    cls: "offline",
+                    color: "#e5484d"
+                },
+                not_monitored: {
+                    label: "unknown",
+                    cls: "dev",
+                    color: "#888"
+                }
+            };
+
+            function normalize(str) {
+                return String(str || "")
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]/g, "");
+            }
+
+            var MATCHERS = {
+                house: "house",
+                library: "librar",
+                cowfun: "fun",
+                brainwave: "brainwave",
+                cowservers: "cowserver"
+            };
+
+            fetch("https://status.theorangecow.org/index.json")
+                .then(function (r) {
+                    if (!r.ok) {
+                        throw new Error("status fetch failed");
+                    }
+
+                    return r.json();
+                })
+                .then(function (data) {
+
+                    var resources = (data.included || []).filter(function (item) {
+                        return item.type === "status_page_resource";
+                    });
+
+                    console.log(
+                        "Better Stack resources found:",
+                        resources.map(function (r) {
+                            return {
+                                public_name: r.attributes.public_name,
+                                status: r.attributes.status
+                            };
+                        })
+                    );
+
+                    Object.keys(MATCHERS).forEach(function (key) {
+
+                        var needle = MATCHERS[key];
+
+                        var match = resources.find(function (res) {
+                            return normalize(res.attributes.public_name)
+                                .indexOf(needle) > -1;
+                        });
+
+                        var row = document.querySelector(
+                            '.svc-row[data-monitor="' + key + '"]'
+                        );
+
+                        if (!row) return;
+
+                        var status =
+                            match && match.attributes.status
+                                ? String(match.attributes.status)
+                                    .toLowerCase()
+                                    .trim()
+                                : "not_monitored";
+
+                        var meta =
+                            STATUS_META[status] ||
+                            STATUS_META.not_monitored;
+
+                        row.setAttribute(
+                            "data-status",
+                            meta.cls
+                        );
+
+                        var dot = row.querySelector(".dot");
+
+                        if (dot) {
+                            dot.className =
+                                "dot " + meta.cls;
+
+                            dot.style.background =
+                                meta.color;
+                        }
+
+                        var tag =
+                            row.querySelector(".svc-status-tag");
+
+                        if (tag) {
+                            tag.textContent =
+                                meta.label;
+
+                            tag.style.color =
+                                meta.color;
+                        }
+                    });
+                })
+                .catch(function (err) {
+
+                    console.error(
+                        "Could not load service statuses:",
+                        err
+                    );
+
+                    document
+                        .querySelectorAll(".svc-status-tag")
+                        .forEach(function (tag) {
+
+                            if (tag.textContent === "checking…") {
+                                tag.textContent =
+                                    "status unavailable";
+                            }
+
+                        });
                 });
 
         })();
