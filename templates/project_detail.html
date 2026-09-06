@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}{{ project.name }} - Orange Cow{% endblock %}
+{% block content %}
+<br><br><br><br>
+
+<a href="{{ url_for('projects_list') }}" class="back-link">&larr; all projects</a>
+
+<div class="section-head">
+    <div>
+        <p class="eyebrow">// project</p>
+        <h2 class="heading">
+            <span class="dot {{ project.status }}"></span>
+            {{ project.name }}
+        </h2>
+        <p class="project-tagline">{{ project.tagline }}</p>
+    </div>
+</div>
+
+{% if project.stack %}
+<div class="svc-stack project-stack">
+    {% for tech in project.stack %}<span>{{ tech }}</span>{% endfor %}
+</div>
+{% endif %}
+
+<div class="project-links">
+    {% if project.live_url %}
+    <a class="btn-primary" href="{{ project.live_url }}" target="_blank" rel="noopener">visit &rarr;</a>
+    {% endif %}
+    {% if project.source_url %}
+    <a class="btn-secondary" href="{{ project.source_url }}" target="_blank" rel="noopener">view source on GitHub</a>
+    {% endif %}
+</div>
+
+{% if project.screenshots %}
+<div class="project-gallery">
+    {% for shot in project.screenshots %}
+    <figure>
+        <img src="{{ shot.src }}" alt="{{ shot.caption or project.name }}" loading="lazy">
+        {% if shot.caption %}<figcaption>{{ shot.caption }}</figcaption>{% endif %}
+    </figure>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if project.description %}
+<div class="project-body">
+    {% for para in project.description %}
+    <p>{{ para }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if project.features %}
+<div class="panel">
+    <p class="panel-label">features</p>
+    <ul class="project-feature-list">
+        {% for f in project.features %}<li>{{ f }}</li>{% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<div class="project-links project-links-bottom">
+    <a href="{{ url_for('projects_list') }}" class="back-link">&larr; back to all projects</a>
+</div>
+{% endblock %}

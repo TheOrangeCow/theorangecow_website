@@ -25,7 +25,7 @@
             <a href="#top" class="logo">theorangecow<span class="dim">_</span><span class="cursor"></span></a>
             <nav class="links">
                 <a href="#about">about</a>
-                <a href="#projects">projects</a>
+                <a href="/projects">projects</a>
                 <a href="#stats">stats</a>
                 <a href="#commits">commits</a>
                 <a href="#contact">contact</a>
@@ -90,8 +90,7 @@
 
                 <h1 class="title">ORANGE<br><span class="line2">COW.</span></h1>
 
-                <p class="hero-sub">developer · self-hoster <span
-                        class="blinker"></span></p>
+                <p class="hero-sub">developer · self-hoster <span class="blinker"></span></p>
 
                 <p class="hero-bio">Based in the UK, building since 2020. Mostly Python and Flask app, the occasional
                     PHP accident by night. I'd rather build the weird, slightly-too-elaborate
@@ -106,7 +105,8 @@
                             loading="lazy">
                         @TheOrangeCow
                     </span>
-                    <iframe src="https://status.theorangecow.org/badge?theme=dark" width="250" height="30" frameborder="0" scrolling="no" style="color-scheme: normal"></iframe>
+                    <iframe src="https://status.theorangecow.org/badge?theme=dark" width="250" height="30"
+                        frameborder="0" scrolling="no" style="color-scheme: normal"></iframe>
                 </div>
             </div>
         </section>
@@ -161,7 +161,7 @@
                         <h2 class="heading">currently running</h2>
                     </div>
                     <p class="section-note">four processes, one box. status, stack, and live stats pulled straight from
-                        GitHub.</p>
+                        GitHub. <a href="/projects" style="color:var(--orange-soft);">read the full write-ups →</a></p>
                 </div>
 
                 <div class="svc-table">
@@ -250,7 +250,7 @@
                         </div>
                     </article>
 
-                    <article class="svc-row" data-status="dev" data-monitor="cowfun">
+                    <article class="svc-row" data-status="online" data-monitor="cowfun">
                         <span class="dot dev"></span>
                         <div class="svc-name-col">
                             <p class="svc-name">cow.fun <span class="svc-status-tag">checking…</span></p>
@@ -262,8 +262,8 @@
                                 &nbsp;·&nbsp; updated <span class="updated">…</span></div>
                         </div>
                         <div class="svc-actions">
-                            <a href="https://fun.theorangecow.org" target="_blank" rel="noopener"
-                                class="primary">visit ↗</a>
+                            <a href="https://fun.theorangecow.org" target="_blank" rel="noopener" class="primary">visit
+                                ↗</a>
                             <a href="https://github.com/TheOrangeCow/cow.fun" target="_blank" rel="noopener">code
                                 ↗</a>
                         </div>
@@ -291,53 +291,150 @@
 
         <section id="stats" class="reveal">
             <div class="wrap">
+
                 <div class="section-head">
                     <div>
                         <p class="eyebrow">// github stats</p>
-                        <h2 class="heading">pulled live, just now</h2>
+                        <h2 class="heading">the numbers behind the cow</h2>
                     </div>
-                    <p class="section-note">fetched straight from the GitHub API on page load - no caching, no faking.
+                    <p class="section-note">
+                        live data pulled from GitHub when you load the page.
                     </p>
                 </div>
 
-                <div class="stat-grid" id="statGrid">
-                    <div class="stat-cell">
-                        <p class="stat-num" id="statRepos">–</p>
-                        <p class="stat-label">public repos</p>
+                <div class="stats-dashboard">
+
+                    <div class="stat-card stat-main">
+                        <div class="stat-top">
+                            <span>public repositories</span>
+                            <span class="stat-live">LIVE</span>
+                        </div>
+                        <div class="stat-big" id="statRepos">–</div>
+                        <div class="stat-bar">
+                            <span id="repoBar"></span>
+                        </div>
+                        <small>projects currently visible on GitHub</small>
                     </div>
-                    <div class="stat-cell">
-                        <p class="stat-num" id="statStars">–</p>
-                        <p class="stat-label">stars earned</p>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">★</div>
+                        <div class="stat-big small" id="statStars">–</div>
+                        <div class="stat-title">stars earned</div>
+                        <div class="stat-sub" id="starSub">across all repositories</div>
                     </div>
-                    <div class="stat-cell">
-                        <p class="stat-num" id="statFollowers">–</p>
-                        <p class="stat-label">followers</p>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">◉</div>
+                        <div class="stat-big small" id="statFollowers">–</div>
+                        <div class="stat-title">followers</div>
+                        <div class="stat-sub">people watching the build</div>
                     </div>
-                    <div class="stat-cell">
-                        <p class="stat-num" id="statLang" style="font-size:clamp(1.3rem,3vw,1.8rem);">–</p>
-                        <p class="stat-label">top language</p>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">⑂</div>
+                        <div class="stat-big small" id="statForks">–</div>
+                        <div class="stat-title">forks</div>
+                        <div class="stat-sub">repository copies</div>
                     </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">⌘</div>
+                        <div class="stat-big small" id="statCommits">–</div>
+                        <div class="stat-title">recent commits</div>
+                        <div class="stat-sub">from public activity</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">◷</div>
+                        <div class="stat-big small" id="statAge">–</div>
+                        <div class="stat-title">years building</div>
+                        <div class="stat-sub">GitHub account age</div>
+                    </div>
+
                 </div>
+
+                <div class="stats-lower">
+
+                    <div class="stats-panel languages-panel">
+                        <div class="stats-panel-head">
+                            <div>
+                                <p class="panel-label">languages</p>
+                                <h3>what gets written</h3>
+                            </div>
+                            <span class="panel-live">LIVE</span>
+                        </div>
+
+                        <div id="languageChart" class="language-chart">
+                            <div class="chart-loading">
+                                calculating language breakdown…
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stats-panel activity-panel">
+                        <div class="stats-panel-head">
+                            <div>
+                                <p class="panel-label">activity</p>
+                                <h3>recent work</h3>
+                            </div>
+                            <span class="activity-total" id="activityTotal">–</span>
+                        </div>
+
+                        <div id="activityChart" class="activity-chart">
+                            <div class="chart-loading">
+                                loading activity…
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
                 <div class="stats-foot">
-                    <span id="statsFootNote">loading github.com/TheOrangeCow …</span>
-                    <a href="https://github.com/TheOrangeCow" target="_blank" rel="noopener">full profile ↗</a>
+                    <span id="statsFootNote">
+                        connecting to github…
+                    </span>
+                    <a href="https://github.com/TheOrangeCow" target="_blank" rel="noopener">
+                        full profile ↗
+                    </a>
                 </div>
+
             </div>
         </section>
 
         <section id="commits" class="reveal">
             <div class="wrap">
+
                 <div class="section-head">
                     <div>
-                        <p class="eyebrow">// recent commits</p>
+                        <p class="eyebrow">// git activity</p>
                         <h2 class="heading">last things shipped</h2>
                     </div>
-                    <p class="section-note">most recent public pushes across every repo, newest first.</p>
+
+                    <p class="section-note">
+                        the latest work across the repositories, pulled straight from GitHub.
+                    </p>
                 </div>
 
-                <div id="commitContainer">
-                    <div class="state-msg">reading commit log…</div>
+                <div class="git-tree">
+
+                    <div class="git-tree-header">
+                        <div>
+                            <span class="tree-status-dot"></span>
+                            <span>main</span>
+                        </div>
+
+                        <span id="treeCount">loading commits…</span>
+                    </div>
+
+                    <div id="commitTree" class="commit-tree">
+                        <div class="tree-loading">
+                            <span class="loading-spinner"></span>
+                            reading git history…
+                        </div>
+                    </div>
+
                 </div>
+
             </div>
         </section>
 
@@ -372,15 +469,74 @@
 
     </main>
 
+    <section id="contact" class="contact-section reveal">
+        <div class="wrap">
+
+            <div class="contact-grid">
+
+                <div class="contact-main">
+                    <p class="eyebrow">// contact</p>
+
+                    <h2 class="contact-title">
+                        GOT A<br>
+                        <span>THING?</span>
+                    </h2>
+
+                    <p class="contact-text">
+                        Got a project idea, found something broken, or just
+                        want to say hello? The easiest way to reach me is
+                        through GitHub.
+                    </p>
+
+                    <div class="contact-actions">
+                        <a href="https://github.com/TheOrangeCow" target="_blank" rel="noopener" class="btn-primary">
+                            GitHub ↗
+                        </a>
+
+                        <a href="mailto:coworange9@gmail.com" target="_blank" rel="noopener" class="btn-gh">
+                            @TheOrangeCow
+                        </a>
+                    </div>
+                </div>
+
+                <div class="contact-terminal">
+
+                    <div class="terminal-head">
+                        <span class="terminal-dot"></span>
+                        <span>contact.sh</span>
+                    </div>
+
+                    <div class="terminal-body">
+                        <p><span class="terminal-orange">$</span> whoami</p>
+                        <p class="terminal-output">TheOrangeCow</p>
+
+                        <p><span class="terminal-orange">$</span> preferred_contact</p>
+                        <p class="terminal-output">github</p>
+
+                        <p><span class="terminal-orange">$</span> status</p>
+                        <p class="terminal-output online-text">
+                            ● usually building something
+                        </p>
+
+                        <p class="terminal-cursor">
+                            <span class="terminal-orange">$</span> _
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
     <footer id="contact">
         <div class="wrap">
-            <p class="footer-cta">STILL<br><span class="o">BUILDING.</span></p>
-            <p class="footer-sub">No contact form here - the fastest way to reach me is GitHub. Open an issue, send a
-                follow, or just poke around the repos.</p>
 
             <div class="footer-cols">
                 <div class="footer-col">
                     <p class="footer-col-title">sites</p>
+                    <a href="https://github.com/TheOrangeCow" target="_blank" rel="noopener">github profile</a>
                     <a href="https://theorangecow.org" target="_blank" rel="noopener">theorangecow.org</a>
                     <a href="https://house-778.theorangecow.org" target="_blank" rel="noopener">house-778</a>
                     <a href="https://library.theorangecow.org" target="_blank" rel="noopener">library</a>
@@ -389,329 +545,805 @@
                     <a href="https://fun.theorangecow.org" target="_blank" rel="noopener">cow.fun</a>
                 </div>
                 <div class="footer-col">
-                    <p class="footer-col-title">code</p>
-                    <a href="https://github.com/TheOrangeCow" target="_blank" rel="noopener">github profile</a>
-                    <a href="https://github.com/TheOrangeCow/house-778" target="_blank" rel="noopener">house-778
-                        repo</a>
-                    <a href="https://github.com/TheOrangeCow/library" target="_blank" rel="noopener">library repo</a>
-                    <a href="https://github.com/TheOrangeCow/Brain-Wave" target="_blank" rel="noopener">brain wave
-                        repo</a>
-                    <a href="https://github.com/TheOrangeCow/cow_servers" target="_blank" rel="noopener">cow_servers
-                        repo</a>
-                    <a href="https://github.com/TheOrangeCow/cow.fun" target="_blank" rel="noopener">cow.fun</a>
+                    <p class="footer-col-title">top projects</p>
+                    
                 </div>
                 <div class="footer-col">
                     <p class="footer-col-title">section</p>
                     <a href="#about">about</a>
                     <a href="#projects">projects</a>
+                    <a href="/projects">all projects</a>
                     <a href="#stats">stats</a>
                     <a href="#commits">commits</a>
                     <a href="#contact">contact</a>
                 </div>
             </div>
 
+
             <div class="footer-bottom">
                 <span>© 2026 TheOrangeCow. Built with too many tabs open.</span>
                 <span class="moo">// moo</span>
             </div>
         </div>
+        </div>
     </footer>
     <script src="/static/script.js"></script>
     <script>
-        
         (function () {
             "use strict";
 
             var GH_USER = "TheOrangeCow";
-            var PROJECT_REPOS = ["house-778", "library", "cow_servers", "Brain-Wave", "cow.fun"];
 
-            function countUp(el, target, opts) {
-                opts = opts || {};
-                if (reducedMotion) { el.textContent = (opts.prefix || "") + target + (opts.suffix || ""); return; }
-                var start = 0;
-                var duration = 900;
-                var startTime = null;
-                function step(ts) {
-                    if (!startTime) startTime = ts;
-                    var progress = Math.min((ts - startTime) / duration, 1);
-                    var eased = 1 - Math.pow(1 - progress, 3);
-                    var val = Math.round(start + (target - start) * eased);
-                    el.textContent = (opts.prefix || "") + val + (opts.suffix || "");
-                    if (progress < 1) requestAnimationFrame(step);
+            var PROJECT_REPOS = [
+                "house-778",
+                "library",
+                "cow_servers",
+                "Brain-Wave",
+                "cow.fun"
+            ];
+
+            var reducedMotion =
+                window.matchMedia &&
+                window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+            function countUp(el, target, duration) {
+                if (!el) return;
+
+                target = Number(target) || 0;
+
+                if (reducedMotion) {
+                    el.textContent = target;
+                    return;
                 }
+
+                var start = 0;
+                var startTime = null;
+
+                function step(timestamp) {
+                    if (!startTime) startTime = timestamp;
+
+                    var progress = Math.min(
+                        (timestamp - startTime) / (duration || 1000),
+                        1
+                    );
+
+                    var eased =
+                        1 - Math.pow(1 - progress, 4);
+
+                    var value =
+                        Math.round(start + (target - start) * eased);
+
+                    el.textContent =
+                        value.toLocaleString();
+
+                    if (progress < 1) {
+                        requestAnimationFrame(step);
+                    }
+                }
+
                 requestAnimationFrame(step);
             }
 
-            var statsAnimated = false;
-            function animateStatsWhenVisible(data) {
-                var statsSection = document.getElementById("stats");
-                function run() {
-                    if (statsAnimated) return;
-                    statsAnimated = true;
-                    countUp(document.getElementById("statRepos"), data.repos);
-                    countUp(document.getElementById("statStars"), data.stars);
-                    countUp(document.getElementById("statFollowers"), data.followers);
-                    document.getElementById("statLang").textContent = data.lang || "-";
+
+            function timeAgo(dateStr) {
+                if (!dateStr) return "unknown";
+
+                var diff =
+                    (Date.now() - new Date(dateStr).getTime()) / 1000;
+
+                var units = [
+                    ["y", 31536000],
+                    ["mo", 2592000],
+                    ["d", 86400],
+                    ["h", 3600],
+                    ["m", 60]
+                ];
+
+                for (var i = 0; i < units.length; i++) {
+                    var amount =
+                        Math.floor(diff / units[i][1]);
+
+                    if (amount >= 1) {
+                        return amount + units[i][0] + " ago";
+                    }
                 }
-                if ("IntersectionObserver" in window && !reducedMotion) {
-                    var obs = new IntersectionObserver(function (entries) {
-                        entries.forEach(function (e) { if (e.isIntersecting) { run(); obs.disconnect(); } });
-                    }, { threshold: 0.3 });
-                    obs.observe(statsSection);
+
+                return "just now";
+            }
+
+
+            function escapeHtml(str) {
+                var div = document.createElement("div");
+                div.textContent = str || "";
+                return div.innerHTML;
+            }
+
+
+            var statsAnimated = false;
+
+            function animateStatsWhenVisible(data) {
+
+                var section =
+                    document.getElementById("stats");
+
+                var dashboard =
+                    document.querySelector(".stats-dashboard");
+
+                function run() {
+
+                    if (statsAnimated) return;
+
+                    statsAnimated = true;
+
+                    if (dashboard) {
+                        dashboard.classList.add("stats-visible");
+                    }
+
+                    countUp(
+                        document.getElementById("statRepos"),
+                        data.repos
+                    );
+
+                    countUp(
+                        document.getElementById("statStars"),
+                        data.stars
+                    );
+
+                    countUp(
+                        document.getElementById("statFollowers"),
+                        data.followers
+                    );
+
+                    countUp(
+                        document.getElementById("statForks"),
+                        data.forks
+                    );
+
+                    countUp(
+                        document.getElementById("statCommits"),
+                        data.commits
+                    );
+
+                    var age =
+                        document.getElementById("statAge");
+
+                    if (age) {
+                        age.textContent =
+                            data.age.toFixed(1);
+                    }
+
+                    animateLanguages(data.languages);
+                    animateActivity(data.activity);
+                }
+
+
+                if (
+                    "IntersectionObserver" in window &&
+                    !reducedMotion
+                ) {
+
+                    var observer =
+                        new IntersectionObserver(
+                            function (entries) {
+
+                                entries.forEach(function (entry) {
+
+                                    if (entry.isIntersecting) {
+                                        run();
+                                        observer.disconnect();
+                                    }
+
+                                });
+
+                            },
+                            {
+                                threshold: .2
+                            }
+                        );
+
+                    observer.observe(section);
+
                 } else {
                     run();
                 }
             }
 
-            function timeAgo(dateStr) {
-                var diff = (Date.now() - new Date(dateStr).getTime()) / 1000;
-                var units = [
-                    ["y", 31536000], ["mo", 2592000], ["d", 86400], ["h", 3600], ["m", 60]
-                ];
-                for (var i = 0; i < units.length; i++) {
-                    var amt = Math.floor(diff / units[i][1]);
-                    if (amt >= 1) return amt + units[i][0] + " ago";
+
+            function animateLanguages(languages) {
+
+                var container =
+                    document.getElementById("languageChart");
+
+                if (!container) return;
+
+                var total = 0;
+
+                Object.keys(languages).forEach(function (key) {
+                    total += languages[key];
+                });
+
+                if (!total) {
+                    container.innerHTML =
+                        '<div class="chart-loading">no language data available.</div>';
+                    return;
                 }
-                return "just now";
+
+                var sorted =
+                    Object.keys(languages)
+                        .sort(function (a, b) {
+                            return languages[b] - languages[a];
+                        })
+                        .slice(0, 7);
+
+                container.innerHTML = "";
+
+                sorted.forEach(function (language, index) {
+
+                    var percent =
+                        (languages[language] / total) * 100;
+
+                    var row =
+                        document.createElement("div");
+
+                    row.className = "language-row";
+
+                    row.innerHTML =
+                        '<div class="language-info">' +
+                        '<span class="language-name">' +
+                        escapeHtml(language) +
+                        '</span>' +
+                        '<span class="language-percent">' +
+                        percent.toFixed(1) +
+                        '%' +
+                        '</span>' +
+                        '</div>' +
+                        '<div class="language-track">' +
+                        '<div class="language-fill" data-width="' +
+                        percent +
+                        '"></div>' +
+                        '</div>';
+
+                    container.appendChild(row);
+
+                    setTimeout(function () {
+
+                        row.classList.add("visible");
+
+                        var fill =
+                            row.querySelector(".language-fill");
+
+                        fill.style.width =
+                            percent + "%";
+
+                    }, index * 100);
+                });
             }
+
+
+            function animateActivity(activity) {
+
+                var container =
+                    document.getElementById("activityChart");
+
+                if (!container) return;
+
+                container.innerHTML = "";
+
+                var max =
+                    Math.max.apply(null, activity.map(function (x) {
+                        return x.count;
+                    }));
+
+                if (max < 1) max = 1;
+
+                var total =
+                    activity.reduce(function (sum, x) {
+                        return sum + x.count;
+                    }, 0);
+
+                document.getElementById("activityTotal")
+                    .textContent =
+                    total + " events";
+
+
+                activity.forEach(function (day, index) {
+
+                    var column =
+                        document.createElement("div");
+
+                    column.className = "activity-day";
+
+                    var height =
+                        day.count === 0
+                            ? 2
+                            : Math.max(
+                                8,
+                                (day.count / max) * 100
+                            );
+
+                    column.innerHTML =
+                        '<div class="activity-column" ' +
+                        'title="' +
+                        day.count +
+                        ' event' +
+                        (day.count === 1 ? "" : "s") +
+                        '">' +
+                        '</div>' +
+                        '<div class="activity-label">' +
+                        day.label +
+                        '</div>';
+
+                    container.appendChild(column);
+
+                    setTimeout(function () {
+
+                        column
+                            .querySelector(".activity-column")
+                            .style.height =
+                            height + "%";
+
+                    }, index * 35);
+                });
+            }
+
 
             var accountCreatedAt = null;
+
             function tickUptime() {
+
                 if (!accountCreatedAt) return;
-                var diff = Math.floor((Date.now() - accountCreatedAt.getTime()) / 1000);
+
+                var diff =
+                    Math.floor(
+                        (Date.now() -
+                            accountCreatedAt.getTime()) / 1000
+                    );
+
                 var d = Math.floor(diff / 86400);
-                var h = Math.floor((diff % 86400) / 3600);
-                var m = Math.floor((diff % 3600) / 60);
+                var h = Math.floor(
+                    (diff % 86400) / 3600
+                );
+                var m = Math.floor(
+                    (diff % 3600) / 60
+                );
                 var s = diff % 60;
-                document.getElementById("uptimeText").textContent =
-                    "uptime " + d + "d " + String(h).padStart(2, "0") + "h " + String(m).padStart(2, "0") + "m " + String(s).padStart(2, "0") + "s";
+
+                var el =
+                    document.getElementById("uptimeText");
+
+                if (!el) return;
+
+                el.textContent =
+                    "uptime " +
+                    d + "d " +
+                    String(h).padStart(2, "0") + "h " +
+                    String(m).padStart(2, "0") + "m " +
+                    String(s).padStart(2, "0") + "s";
             }
+
             setInterval(tickUptime, 1000);
 
-            fetch("https://api.github.com/users/" + GH_USER)
-                .then(function (r) { if (!r.ok) throw new Error("user fetch failed"); return r.json(); })
-                .then(function (user) {
-                    accountCreatedAt = new Date(user.created_at);
+
+            function buildActivity(events) {
+
+                var days = [];
+
+                for (var i = 13; i >= 0; i--) {
+
+                    var date = new Date();
+
+                    date.setHours(0, 0, 0, 0);
+                    date.setDate(date.getDate() - i);
+
+                    days.push({
+                        date: date,
+                        count: 0,
+                        label:
+                            date.toLocaleDateString(
+                                "en-GB",
+                                { weekday: "short" }
+                            ).slice(0, 2)
+                    });
+                }
+
+                events.forEach(function (event) {
+
+                    var eventDate =
+                        new Date(event.created_at);
+
+                    eventDate.setHours(0, 0, 0, 0);
+
+                    days.forEach(function (day) {
+
+                        if (
+                            day.date.getTime() ===
+                            eventDate.getTime()
+                        ) {
+                            day.count++;
+                        }
+
+                    });
+                });
+
+                return days;
+            }
+
+
+            Promise.all([
+
+                fetch(
+                    "https://api.github.com/users/" +
+                    GH_USER
+                ).then(function (r) {
+                    if (!r.ok) throw new Error();
+                    return r.json();
+                }),
+
+                fetch(
+                    "https://api.github.com/users/" +
+                    GH_USER +
+                    "/repos?per_page=100&type=owner"
+                ).then(function (r) {
+                    if (!r.ok) throw new Error();
+                    return r.json();
+                }),
+
+                fetch(
+                    "https://api.github.com/users/" +
+                    GH_USER +
+                    "/events/public?per_page=100"
+                ).then(function (r) {
+                    if (!r.ok) throw new Error();
+                    return r.json();
+                })
+
+            ])
+
+                .then(function (results) {
+
+                    var user = results[0];
+                    var repos = results[1];
+                    var events = results[2];
+
+
+                    accountCreatedAt =
+                        new Date(user.created_at);
+
                     tickUptime();
 
-                    return fetch("https://api.github.com/users/" + GH_USER + "/repos?per_page=100&type=owner")
-                        .then(function (r) { if (!r.ok) throw new Error("repos fetch failed"); return r.json(); })
-                        .then(function (repos) {
-                            var stars = 0;
-                            var langCount = {};
-                            repos.forEach(function (repo) {
-                                stars += repo.stargazers_count || 0;
-                                if (repo.language) langCount[repo.language] = (langCount[repo.language] || 0) + 1;
-                            });
-                            var topLang = "-";
-                            var max = 0;
-                            Object.keys(langCount).forEach(function (l) {
-                                if (langCount[l] > max) { max = langCount[l]; topLang = l; }
-                            });
 
-                            document.getElementById("statsFootNote").textContent =
-                                "live from github.com/" + GH_USER + " · last checked just now";
+                    var age =
+                        (
+                            Date.now() -
+                            accountCreatedAt.getTime()
+                        ) /
+                        (365.25 * 86400000);
 
-                            animateStatsWhenVisible({
-                                repos: user.public_repos,
-                                stars: stars,
-                                followers: user.followers,
-                                lang: topLang
-                            });
 
-                            repos.forEach(function (repo) {
-                                var cell = document.querySelector('.svc-live-stats[data-repo="' + repo.name + '"]');
-                                if (cell) {
-                                    cell.querySelector(".stars").textContent = repo.stargazers_count;
-                                    cell.querySelector(".updated").textContent = timeAgo(repo.pushed_at);
-                                }
-                            });
+                    var stars = 0;
+                    var forks = 0;
+
+                    var languages = {};
+
+
+                    repos.forEach(function (repo) {
+
+                        stars +=
+                            repo.stargazers_count || 0;
+
+                        forks +=
+                            repo.forks_count || 0;
+
+
+                        if (repo.language) {
+
+                            languages[repo.language] =
+                                (languages[repo.language] || 0) + 1;
+
+                        }
+
+                        var cell =
+                            document.querySelector(
+                                '.svc-live-stats[data-repo="' +
+                                repo.name +
+                                '"]'
+                            );
+
+                        if (cell) {
+
+                            var starsEl =
+                                cell.querySelector(".stars");
+
+                            var updatedEl =
+                                cell.querySelector(".updated");
+
+                            if (starsEl) {
+                                starsEl.textContent =
+                                    repo.stargazers_count;
+                            }
+
+                            if (updatedEl) {
+                                updatedEl.textContent =
+                                    timeAgo(repo.pushed_at);
+                            }
+                        }
+
+                    });
+
+
+                    var pushEvents =
+                        events.filter(function (event) {
+                            return event.type === "PushEvent";
                         });
+
+
+                    animateStatsWhenVisible({
+
+                        repos: user.public_repos,
+
+                        stars: stars,
+
+                        followers: user.followers,
+
+                        forks: forks,
+
+                        commits: pushEvents.length,
+
+                        age: age,
+
+                        languages: languages,
+
+                        activity:
+                            buildActivity(events)
+
+                    });
+
+
+                    var foot =
+                        document.getElementById(
+                            "statsFootNote"
+                        );
+
+                    if (foot) {
+
+                        foot.textContent =
+                            "live from github.com/" +
+                            GH_USER +
+                            " · checked just now";
+
+                    }
+
+                    var repoBar =
+                        document.getElementById("repoBar");
+
+                    if (repoBar) {
+
+                        repoBar.style.width =
+                            Math.min(
+                                100,
+                                user.public_repos * 4
+                            ) + "%";
+
+                    }
+
                 })
-                .catch(function (err) {
-                    document.getElementById("statsFootNote").textContent =
-                        "github API didn't respond (probably rate-limited) - see the live profile instead.";
-                    ["statRepos", "statStars", "statFollowers"].forEach(function (id) {
-                        document.getElementById(id).textContent = "-";
-                    });
-                    document.getElementById("statLang").textContent = "-";
-                    document.getElementById("uptimeText").textContent = "uptime - unavailable";
-                    document.querySelectorAll(".svc-live-stats").forEach(function (cell) {
-                        cell.textContent = "stats unavailable";
-                    });
+
+                .catch(function () {
+
+                    document.getElementById(
+                        "statsFootNote"
+                    ).textContent =
+                        "github API unavailable — see the profile instead.";
+
                 });
 
             function fetchRepoCommits(repo) {
-                return fetch("https://api.github.com/repos/" + GH_USER + "/" + repo + "/commits?per_page=5")
-                    .then(function (r) { if (!r.ok) return []; return r.json(); })
-                    .then(function (data) {
-                        if (!Array.isArray(data)) return [];
-                        return data.map(function (c) {
-                            return {
-                                repo: repo,
-                                message: ((c.commit && c.commit.message) || "").split("\n")[0],
-                                sha: c.sha,
-                                date: (c.commit && c.commit.author && c.commit.author.date) || null,
-                                fullRepo: GH_USER + "/" + repo
-                            };
-                        });
+
+                return fetch(
+                    "https://api.github.com/repos/" +
+                    GH_USER +
+                    "/" +
+                    repo +
+                    "/commits?per_page=5"
+                )
+                    .then(function (r) {
+
+                        if (!r.ok) return [];
+
+                        return r.json();
+
                     })
-                    .catch(function () { return []; });
-            }
+                    .then(function (data) {
 
-            Promise.all(PROJECT_REPOS.map(fetchRepoCommits))
-                .then(function (results) {
-                    var commits = [].concat.apply([], results).filter(function (c) { return c.date; });
-                    commits.sort(function (a, b) { return new Date(b.date) - new Date(a.date); });
-                    commits = commits.slice(0, 6);
+                        if (!Array.isArray(data)) return [];
 
-                    var container = document.getElementById("commitContainer");
-                    if (!commits.length) {
-                        container.innerHTML = '<div class="state-msg">couldn\'t load commits right now - <a href="https://github.com/TheOrangeCow" target="_blank" rel="noopener" style="color:var(--orange-soft);">see activity on GitHub</a> instead.</div>';
-                        return;
-                    }
+                        return data.map(function (commit) {
 
-                    var html = '<div class="commit-list">';
-                    commits.forEach(function (c) {
-                        var url = "https://github.com/" + c.fullRepo + "/commit/" + c.sha;
-                        html += '<div class="commit-row linkrow">' +
-                            '<a href="' + url + '" target="_blank" rel="noopener">' +
-                            '<span class="commit-repo">' + c.repo + '</span>' +
-                            '<span class="commit-msg">' + escapeHtml(c.message || "(no message)") + '</span>' +
-                            '<span class="commit-time">' + timeAgo(c.date) + '</span>' +
-                            '</a>' +
-                            '</div>';
-                    });
-                    html += '</div>';
-                    container.innerHTML = html;
-                })
-                .catch(function () {
-                    document.getElementById("commitContainer").innerHTML =
-                        '<div class="state-msg">couldn\'t reach the GitHub API right now (likely rate-limited) - <a href="https://github.com/TheOrangeCow" target="_blank" rel="noopener" style="color:var(--orange-soft);">see activity on GitHub</a> instead.</div>';
-                });
+                            return {
 
-            fetch("https://api.github.com/users/" + GH_USER + "/events/public?per_page=30")
-                .then(function (r) { if (!r.ok) throw new Error("events fetch failed"); return r.json(); })
-                .then(function (events) {
-                    var commits = [];
-                    events.forEach(function (ev) {
-                        if (ev.type === "PushEvent" && ev.payload && ev.payload.commits) {
-                            ev.payload.commits.forEach(function (c) {
-                                commits.push({
-                                    repo: ev.repo.name.split("/")[1],
-                                    message: (c.message || "").split("\n")[0],
-                                    sha: c.sha,
-                                    date: ev.created_at,
-                                    fullRepo: ev.repo.name
-                                });
-                            });
-                        }
-                    });
-                    commits = commits.slice(0, 6);
+                                repo: repo,
 
-                    var container = document.getElementById("commitContainer");
-                    if (!commits.length) {
-                        container.innerHTML = '<div class="state-msg">no public pushes in recent activity - check the repos directly.</div>';
-                        return;
-                    }
+                                message:
+                                    (
+                                        commit.commit &&
+                                        commit.commit.message
+                                    ) ||
+                                    "(no message)",
 
-                    var html = '<div class="commit-list">';
-                    commits.forEach(function (c) {
-                        var url = "https://github.com/" + c.fullRepo + "/commit/" + c.sha;
-                        html += '<div class="commit-row linkrow">' +
-                            '<a href="' + url + '" target="_blank" rel="noopener">' +
-                            '<span class="commit-repo">' + c.repo + '</span>' +
-                            '<span class="commit-msg">' + escapeHtml(c.message || "(no message)") + '</span>' +
-                            '<span class="commit-time">' + timeAgo(c.date) + '</span>' +
-                            '</a>' +
-                            '</div>';
-                    });
-                    html += '</div>';
-                    container.innerHTML = html;
-                })
-                .catch(function () {
-                    document.getElementById("commitContainer").innerHTML =
-                        '<div class="state-msg">couldn\'t reach the GitHub API right now (likely rate-limited) - <a href="https://github.com/TheOrangeCow" target="_blank" rel="noopener" style="color:var(--orange-soft);">see activity on GitHub</a> instead.</div>';
-                });
+                                sha:
+                                    commit.sha,
 
-            function escapeHtml(str) {
-                var div = document.createElement("div");
-                div.textContent = str;
-                return div.innerHTML;
-            }
+                                date:
+                                    commit.commit &&
+                                    commit.commit.author &&
+                                    commit.commit.author.date,
 
-        })();
-    </script>
+                                url:
+                                    "https://github.com/" +
+                                    GH_USER +
+                                    "/" +
+                                    repo +
+                                    "/commit/" +
+                                    commit.sha
 
-    <script>
-        (function () {
-            "use strict";
+                            };
 
-            var STATUS_META = {
-                operational:   { label: "online",      cls: "online",  color: "#3ecf6e" },
-                degraded:      { label: "degraded",    cls: "dev",     color: "#f5a623" },
-                maintenance:   { label: "maintenance", cls: "dev",     color: "#f5a623" },
-                downtime:      { label: "offline",     cls: "offline", color: "#e5484d" },
-                not_monitored: { label: "unknown",     cls: "dev",     color: "#888" }
-            };
-
-            function normalize(str) {
-                return String(str || "").toLowerCase().replace(/[^a-z0-9]/g, "");
-            }
-
-            var MATCHERS = {
-                house:      "house",
-                library:    "librar",
-                cowfun:     "fun",
-                brainwave:  "brainwave",
-                cowservers: "cowserver"
-            };
-
-            fetch("https://status.theorangecow.org/index.json")
-                .then(function (r) { if (!r.ok) throw new Error("status fetch failed"); return r.json(); })
-                .then(function (data) {
-                    var resources = (data.included || []).filter(function (i) { return i.type === "status_page_resource"; });
-
-                    console.log("Better Stack resources found:", resources.map(function (r) {
-                        return { public_name: r.attributes.public_name, status: r.attributes.status };
-                    }));
-
-                    Object.keys(MATCHERS).forEach(function (key) {
-                        var needle = MATCHERS[key];
-                        var match = resources.find(function (res) {
-                            return normalize(res.attributes.public_name).indexOf(needle) > -1;
                         });
-                        var row = document.querySelector('.svc-row[data-monitor="' + key + '"]');
-                        if (!row) return;
 
-                        if (!match) {
-                            console.warn('No Better Stack resource matched monitor "' + key + '" (looked for "' + needle + '"). Check the resource list logged above.');
-                        }
-
-                        var status = match && match.attributes.status
-                            ? String(match.attributes.status).toLowerCase().trim()
-                            : "not_monitored";
-                        var meta = STATUS_META[status] || STATUS_META.not_monitored;
-
-                        if (!STATUS_META[status]) {
-                            console.warn('Unrecognized Better Stack status "' + status + '" for monitor "' + key + '" - treating as unknown. Raw resource:', match);
-                        }
-
-                        row.setAttribute("data-status", meta.cls);
-
-                        var dot = row.querySelector(".dot");
-                        if (dot) { dot.className = "dot " + meta.cls; dot.style.background = meta.color; }
-
-                        var tag = row.querySelector(".svc-status-tag");
-                        if (tag) { tag.textContent = meta.label; tag.style.color = meta.color; }
+                    })
+                    .catch(function () {
+                        return [];
                     });
+            }
+
+
+            Promise.all(
+                PROJECT_REPOS.map(fetchRepoCommits)
+            )
+                .then(function (results) {
+
+                    var commits =
+                        [].concat.apply([], results)
+                            .filter(function (commit) {
+                                return commit.date;
+                            });
+
+
+                    commits.sort(function (a, b) {
+
+                        return new Date(b.date) -
+                            new Date(a.date);
+
+                    });
+
+
+                    commits =
+                        commits.slice(0, 10);
+
+
+                    var container =
+                        document.getElementById(
+                            "commitTree"
+                        );
+
+                    var count =
+                        document.getElementById(
+                            "treeCount"
+                        );
+
+
+                    if (!commits.length) {
+
+                        container.innerHTML =
+                            '<div class="tree-loading">' +
+                            'couldn\'t load commits right now.' +
+                            '</div>';
+
+                        return;
+                    }
+
+
+                    count.textContent =
+                        commits.length +
+                        " latest commits";
+
+
+                    container.innerHTML = "";
+
+
+                    commits.forEach(function (commit, index) {
+
+                        var node =
+                            document.createElement("div");
+
+                        node.className =
+                            "commit-node";
+
+
+                        var shortSha =
+                            commit.sha.substring(0, 7);
+
+
+                        node.innerHTML =
+
+                            '<span class="commit-branch"></span>' +
+
+                            '<div>' +
+                            '<div class="commit-dot"></div>' +
+                            '</div>' +
+
+                            '<div class="commit-content">' +
+
+                            '<div class="commit-meta">' +
+
+                            '<span class="commit-repo-new">' +
+                            escapeHtml(commit.repo) +
+                            '</span>' +
+
+                            '<span class="commit-sha">' +
+                            shortSha +
+                            '</span>' +
+
+                            '</div>' +
+
+                            '<div class="commit-message-new">' +
+                            escapeHtml(
+                                commit.message
+                                    .split("\n")[0]
+                            ) +
+                            '</div>' +
+
+                            '<div class="commit-bottom">' +
+
+                            '<span class="commit-date-new">' +
+                            timeAgo(commit.date) +
+                            '</span>' +
+
+                            '<a class="commit-open" ' +
+                            'href="' +
+                            commit.url +
+                            '" ' +
+                            'target="_blank" ' +
+                            'rel="noopener">' +
+                            'view commit ↗' +
+                            '</a>' +
+
+                            '</div>' +
+
+                            '</div>';
+
+
+                        container.appendChild(node);
+
+
+                        if (reducedMotion) {
+
+                            node.classList.add("visible");
+
+                        } else {
+
+                            setTimeout(function () {
+
+                                node.classList.add("visible");
+
+                            }, index * 130);
+
+                        }
+
+                    });
+
                 })
-                .catch(function (err) {
-                    console.error("Could not load service statuses:", err);
-                    document.querySelectorAll(".svc-status-tag").forEach(function (tag) {
-                        if (tag.textContent === "checking…") tag.textContent = "status unavailable";
-                    });
+                .catch(function () {
+
+                    document.getElementById(
+                        "commitTree"
+                    ).innerHTML =
+                        '<div class="tree-loading">' +
+                        'couldn\'t reach GitHub right now.' +
+                        '</div>';
+
                 });
+
         })();
     </script>
 

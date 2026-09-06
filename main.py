@@ -1,12 +1,13 @@
 import os
 import secrets
 
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify, flash
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify, flash, abort
 from flask_session import Session
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import db
 import sso
+from projects import PROJECTS, get_project
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("WEBHOOK_SECRET")
@@ -281,6 +282,19 @@ def index():
 @app.route("/library")
 def library():
     return render_template("library.html")
+
+
+@app.route("/projects")
+def projects_list():
+    return render_template("projects.html", projects=PROJECTS)
+
+
+@app.route("/projects/<slug>")
+def project_detail(slug):
+    project = get_project(slug)
+    if not project:
+        abort(404)
+    return render_template("project_detail.html", project=project)
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Projects - Orange Cow{% endblock %}
+{% block content %}
+<br><br><br><br>
+
+<div class="section-head">
+    <div>
+        <p class="eyebrow">// projects</p>
+        <h2 class="heading">the write-ups</h2>
+    </div>
+    <p class="section-note">everything I've built, with the descriptions, screenshots and links that don't fit on
+        the homepage.</p>
+</div>
+
+<div class="project-grid">
+    {% for p in projects %}
+    <a href="{{ url_for('project_detail', slug=p.slug) }}" class="project-card">
+        {% if p.screenshots %}
+        <div class="project-card-img">
+            <img src="{{ p.screenshots[0].src }}" alt="{{ p.name }} screenshot" loading="lazy">
+        </div>
+        {% else %}
+        <div class="project-card-img project-card-img-empty">
+            <span>{{ p.name }}</span>
+        </div>
+        {% endif %}
+        <div class="project-card-body">
+            <p class="project-card-name">
+                <span class="dot {{ p.status }}"></span>
+                {{ p.name }}
+            </p>
+            <p class="project-card-tagline">{{ p.tagline }}</p>
+            {% if p.stack %}
+            <div class="svc-stack">
+                {% for tech in p.stack %}<span>{{ tech }}</span>{% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </a>
+    {% endfor %}
+
+    {% if not projects %}
+    <div class="state-msg">no write-ups yet - check back soon.</div>
+    {% endif %}
+</div>
+{% endblock %}
