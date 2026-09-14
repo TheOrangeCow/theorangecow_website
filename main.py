@@ -236,12 +236,19 @@ def account():
 
 def admin_required(f):
     from functools import wraps
+
     @wraps(f)
     def wrapper(*args, **kwargs):
         user = current_user()
-        if not user or user["username"] != "theorangecow":
+
+        if not user:
+            return redirect(url_for("login", next=request.path))
+
+        if user["username"] != "theorangecow":
             return redirect(url_for("index"))
+
         return f(*args, **kwargs)
+
     return wrapper
 
 
@@ -337,16 +344,13 @@ def application_running(port):
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL
     )
+
     return result.returncode == 0
 
 
-@admin_required
 @app.route("/control")
+@admin_required
 def control():
-    if not csrf_ok():
-        flash("That form expired - try again.", "error")
-        return redirect(url_for("control"))
-    
     applications = {}
 
     for key, application in APPLICATIONS.items():
@@ -361,12 +365,13 @@ def control():
     )
 
 
-@admin_required
 @app.route("/control/<name>/start", methods=["POST"])
+@admin_required
 def control_start(name):
     if not csrf_ok():
         flash("That form expired - try again.", "error")
         return redirect(url_for("control"))
+
     application = APPLICATIONS.get(name)
 
     if not application:
@@ -374,9 +379,7 @@ def control_start(name):
 
     subprocess.Popen(
         ["bash", os.path.join(application["path"], "update_app.sh")],
-        cwd=application["path"],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL
+        cwd=application["path"]
     )
 
     flash(f"{application['name']} update started.", "success")
@@ -384,21 +387,20 @@ def control_start(name):
     return redirect(url_for("control"))
 
 
-@admin_required
 @app.route("/control/<name>/stop", methods=["POST"])
+@admin_required
 def control_stop(name):
     if not csrf_ok():
         flash("That form expired - try again.", "error")
         return redirect(url_for("control"))
+
     application = APPLICATIONS.get(name)
 
     if not application:
         abort(404)
 
     subprocess.run(
-        ["sudo", "fuser", "-k", f"{application['port']}/tcp"],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL
+        ["sudo", "fuser", "-k", f"{application['port']}/tcp"]
     )
 
     flash(f"{application['name']} stopped.", "success")
@@ -406,29 +408,25 @@ def control_stop(name):
     return redirect(url_for("control"))
 
 
-@admin_required
 @app.route("/control/<name>/restart", methods=["POST"])
+@admin_required
 def control_restart(name):
     if not csrf_ok():
         flash("That form expired - try again.", "error")
         return redirect(url_for("control"))
-    
+
     application = APPLICATIONS.get(name)
 
     if not application:
         abort(404)
 
     subprocess.run(
-        ["sudo", "fuser", "-k", f"{application['port']}/tcp"],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL
+        ["sudo", "fuser", "-k", f"{application['port']}/tcp"]
     )
 
     subprocess.Popen(
         ["bash", os.path.join(application["path"], "update_app.sh")],
-        cwd=application["path"],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL
+        cwd=application["path"]
     )
 
     flash(f"{application['name']} restarted.", "success")
