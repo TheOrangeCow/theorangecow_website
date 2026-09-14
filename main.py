@@ -1,5 +1,6 @@
 import os
 import secrets
+import subprocess
 
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, flash, abort
 from flask_session import Session
@@ -295,6 +296,144 @@ def project_detail(slug):
     if not project:
         abort(404)
     return render_template("project_detail.html", project=project)
+
+APPLICATIONS = {
+    "brainwave": {
+        "name": "Brain Wave",
+        "path": "/var/www/brainwave",
+        "port": 7000
+    },
+    "flaskapp": {
+        "name": "TheOrangeCow",
+        "path": "/var/www/flaskapp",
+        "port": 5000
+    },
+    "fun": {
+        "name": "Cow.fun",
+        "path": "/var/www/fun",
+        "port": 6002
+    },
+    "libary": {
+        "name": "Library",
+        "path": "/var/www/libary",
+        "port": 6000
+    },
+    "sockets": {
+        "name": "Cow Servers",
+        "path": "/var/www/sockets",
+        "port": 6001
+    },
+    "post": {
+        "name": "post",
+        "path": "/var/www/post",
+        "port": 6500
+    }
+}
+
+
+def application_running(port):
+    result = subprocess.run(
+        ["sudo", "fuser", f"{port}/tcp"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL
+    )
+    return result.returncode == 0
+
+
+@admin_required
+@app.route("/control")
+def control():
+    if not csrf_ok():
+        flash("That form expired - try again.", "error")
+        return redirect(url_for("control"))
+    
+    applications = {}
+
+    for key, application in APPLICATIONS.items():
+        applications[key] = {
+            **application,
+            "running": application_running(application["port"])
+        }
+
+    return render_template(
+        "control.html",
+        applications=applications
+    )
+
+
+@admin_required
+@app.route("/control/<name>/start", methods=["POST"])
+def control_start(name):
+    if not csrf_ok():
+        flash("That form expired - try again.", "error")
+        return redirect(url_for("control"))
+    application = APPLICATIONS.get(name)
+
+    if not application:
+        abort(404)
+
+    subprocess.Popen(
+        ["bash", os.path.join(application["path"], "update_app.sh")],
+        cwd=application["path"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL
+    )
+
+    flash(f"{application['name']} update started.", "success")
+
+    return redirect(url_for("control"))
+
+
+@admin_required
+@app.route("/control/<name>/stop", methods=["POST"])
+def control_stop(name):
+    if not csrf_ok():
+        flash("That form expired - try again.", "error")
+        return redirect(url_for("control"))
+    application = APPLICATIONS.get(name)
+
+    if not application:
+        abort(404)
+
+    subprocess.run(
+        ["sudo", "fuser", "-k", f"{application['port']}/tcp"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL
+    )
+
+    flash(f"{application['name']} stopped.", "success")
+
+    return redirect(url_for("control"))
+
+
+@admin_required
+@app.route("/control/<name>/restart", methods=["POST"])
+def control_restart(name):
+    if not csrf_ok():
+        flash("That form expired - try again.", "error")
+        return redirect(url_for("control"))
+    
+    application = APPLICATIONS.get(name)
+
+    if not application:
+        abort(404)
+
+    subprocess.run(
+        ["sudo", "fuser", "-k", f"{application['port']}/tcp"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL
+    )
+
+    subprocess.Popen(
+        ["bash", os.path.join(application["path"], "update_app.sh")],
+        cwd=application["path"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL
+    )
+
+    flash(f"{application['name']} restarted.", "success")
+
+    return redirect(url_for("control"))
 
 if __name__ == "__main__":
     app.run(debug=True)
