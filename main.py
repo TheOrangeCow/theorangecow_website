@@ -302,6 +302,12 @@ def project_detail(slug):
         abort(404)
     return render_template("project_detail.html", project=project)
 
+@app.route("/admin")
+@admin_required
+def admin_page():
+    return render_template("admin.html")
+
+
 APPLICATIONS = {
     "brainwave": {
         "name": "Brain Wave",
