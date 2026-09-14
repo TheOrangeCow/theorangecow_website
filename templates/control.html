@@ -1,142 +1,230 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Server Control</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Control - TheOrangeCow</title>
+    <link rel="icon" href="/static/icon.ico">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
 
     <style>
-        body {
-            margin: 0;
-            background: #0b0c0a;
-            color: #f5f5f5;
-            font-family: Arial, sans-serif;
+        /* ---- page-specific additions, built on top of style.css tokens ---- */
+
+        .control-hero {
+            padding: 150px 0 60px;
+            border-bottom: 1px solid var(--line-soft);
         }
 
-        main {
-            max-width: 1000px;
-            margin: 60px auto;
-            padding: 20px;
+        .control-hero .uptime {
+            margin-top: 26px;
         }
 
-        h1 {
-            margin-bottom: 30px;
-        }
-
-        .application {
-            background: #151613;
-            border: 1px solid #292a26;
-            border-radius: 14px;
-            padding: 22px;
-            margin-bottom: 15px;
-        }
-
-        .top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .status {
-            font-size: 14px;
-        }
-
-        .running {
-            color: #5cff87;
-        }
-
-        .stopped {
-            color: #ff5e5e;
-        }
-
-        .buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        button {
-            border: 0;
-            border-radius: 8px;
-            padding: 10px 16px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .start {
-            background: #5cff87;
-            color: #071009;
-        }
-
-        .stop {
-            background: #ff5e5e;
-            color: white;
-        }
-
-        .restart {
-            background: #ff5e1a;
-            color: white;
-        }
-
-        .port {
-            color: #888;
-            font-family: monospace;
-        }
-
-        .server-stats {
+        .control-stat-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .stat {
-            background: #151613;
-            border: 1px solid #292a26;
-            border-radius: 14px;
-            padding: 20px;
-        }
-
-        .stat span,
-        .usage span {
-            display: block;
-            color: #888;
-            font-size: 13px;
-            margin-bottom: 6px;
-        }
-
-        .stat strong {
-            display: block;
-            font-size: 28px;
-        }
-
-        .stat small {
-            display: block;
-            color: #777;
-            margin-top: 5px;
-        }
-
-        .usage {
-            display: flex;
-            gap: 40px;
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid #292a26;
-        }
-
-        .usage strong {
-            font-size: 20px;
-        }
-
-        .usage small {
-            display: block;
-            color: #777;
-            font-size: 12px;
-            margin-top: 3px;
+            gap: 1px;
+            background: var(--line);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin-bottom: 20px;
         }
 
         @media (max-width: 700px) {
-            .server-stats {
+            .control-stat-grid {
                 grid-template-columns: 1fr;
+            }
+        }
+
+        .control-stat-cell {
+            background: var(--bg-raised);
+            padding: 26px 24px;
+        }
+
+        .control-stat-cell span {
+            display: block;
+            font-family: var(--mono);
+            font-size: 0.76rem;
+            color: var(--muted);
+            text-transform: lowercase;
+            margin-bottom: 10px;
+        }
+
+        .control-stat-cell strong {
+            display: block;
+            font-family: var(--mono);
+            font-weight: 700;
+            font-size: clamp(1.8rem, 4vw, 2.4rem);
+            color: var(--orange);
+        }
+
+        .control-stat-cell small {
+            display: block;
+            font-family: var(--mono);
+            font-size: 0.74rem;
+            color: var(--muted-2);
+            margin-top: 8px;
+        }
+
+        .app-row {
+            display: grid;
+            grid-template-columns: 12px 1.6fr auto auto;
+            gap: 20px;
+            align-items: center;
+            padding: 22px 24px;
+            border-bottom: 1px solid var(--line-soft);
+            background: var(--bg-raised);
+            transition: background .15s ease;
+        }
+
+        .app-row:last-child {
+            border-bottom: none;
+        }
+
+        .app-row:hover {
+            background: var(--bg-raised-2);
+        }
+
+        .app-name-col {
+            min-width: 0;
+        }
+
+        .app-name {
+            font-family: var(--display);
+            font-weight: 600;
+            font-size: 1.12rem;
+            margin: 0 0 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .app-port {
+            font-family: var(--mono);
+            font-size: 0.76rem;
+            color: var(--muted-2);
+        }
+
+        .app-usage {
+            font-family: var(--mono);
+            font-size: 0.76rem;
+            color: var(--muted);
+            display: flex;
+            gap: 16px;
+            white-space: nowrap;
+        }
+
+        .app-usage strong {
+            color: var(--cream);
+        }
+
+        .app-usage .stopped-note {
+            color: var(--red);
+        }
+
+        .app-status {
+            font-family: var(--mono);
+            font-size: 0.76rem;
+            white-space: nowrap;
+        }
+
+        .app-status.running {
+            color: var(--green);
+        }
+
+        .app-status.stopped {
+            color: var(--red);
+        }
+
+        .app-actions {
+            display: flex;
+            gap: 8px;
+            justify-self: end;
+            flex-wrap: wrap;
+        }
+
+        .app-actions form {
+            display: inline;
+        }
+
+        .app-actions button {
+            font-family: var(--mono);
+            font-size: 0.76rem;
+            font-weight: 600;
+            border-radius: 6px;
+            border: 1px solid transparent;
+            padding: 9px 14px;
+            cursor: pointer;
+            transition: transform .15s ease, background .15s ease, border-color .15s ease;
+        }
+
+        .app-actions button:hover {
+            transform: translateY(-1px);
+        }
+
+        .app-btn-start {
+            background: var(--green);
+            color: #071009;
+        }
+
+        .app-btn-start:hover {
+            background: #7dd996;
+        }
+
+        .app-btn-stop {
+            background: transparent;
+            border-color: var(--line);
+            color: var(--red);
+        }
+
+        .app-btn-stop:hover {
+            border-color: var(--red);
+        }
+
+        .app-btn-restart {
+            background: var(--orange);
+            color: #1a0a02;
+        }
+
+        .app-btn-restart:hover {
+            background: var(--orange-soft);
+        }
+
+        @media (max-width: 760px) {
+            .app-row {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .app-row>.dot {
+                display: none;
+            }
+
+            .app-name::before {
+                content: "";
+                width: 9px;
+                height: 9px;
+                border-radius: 50%;
+                background: var(--muted-2);
+                display: inline-block;
+            }
+
+            .app-row[data-status="running"] .app-name::before {
+                background: var(--green);
+            }
+
+            .app-row[data-status="stopped"] .app-name::before {
+                background: var(--red);
+            }
+
+            .app-actions {
+                justify-self: start;
             }
         }
     </style>
@@ -144,104 +232,150 @@
 
 <body>
 
+    <div class="grain"></div>
+    <div class="glow"></div>
+
+    <header class="nav">
+        <div class="nav-inner">
+            <a href="/" class="logo">theorangecow<span class="dim">_</span><span class="cursor"></span></a>
+            <nav class="links">
+                <a href="/">home</a>
+                <a href="/#projects">projects</a>
+                <a href="/control">control</a>
+            </nav>
+            <div id="nav-but" class="nav-right">
+                <a class="btn-gh" href="https://github.com/TheOrangeCow" target="_blank" rel="noopener">
+                    github ↗
+                </a>
+                <a class="btn-gh" href="/account" rel="noopener">
+                    Cow Account ↗
+                </a>
+            </div>
+            <div class="nav-right">
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+        <div class="mobile-links" id="mobileLinks">
+            <a href="/">home</a>
+            <a href="/#projects">projects</a>
+            <a href="/control">control</a>
+            <a href="https://github.com/TheOrangeCow" target="_blank" rel="noopener">github ↗</a>
+            <a href="/account" rel="noopener">Cow Account ↗</a>
+        </div>
+    </header>
+
     <main>
 
-        <h1>Server Control</h1>
-
-        <div class="server-stats">
-
-            <div class="stat">
-                <span>CPU</span>
-                <strong>{{ server.cpu }}%</strong>
+        <section class="control-hero">
+            <div class="wrap">
+                <p class="eyebrow">orange-cow:~$ systemctl status --all</p>
+                <h1 class="title">SERVER<br><span class="line2">CONTROL.</span></h1>
+                <p class="hero-sub">live process management <span class="blinker"></span></p>
             </div>
+        </section>
 
-            <div class="stat">
-                <span>Memory</span>
-                <strong>{{ server.memory }}%</strong>
-                <small>{{ server.memory_used }} GB / {{ server.memory_total }} GB</small>
-            </div>
-
-            <div class="stat">
-                <span>Disk</span>
-                <strong>{{ server.disk }}%</strong>
-                <small>{{ server.disk_used }} GB / {{ server.disk_total }} GB</small>
-            </div>
-
-        </div>
-
-        {% for key, application in applications.items() %}
-
-        <div class="application">
-
-            <div class="top">
-                <div>
-                    <h2>{{ application.name }}</h2>
-                    <div class="port">
-                        Port {{ application.port }}
+        <section id="system" class="reveal">
+            <div class="wrap">
+                <div class="section-head">
+                    <div>
+                        <p class="eyebrow">// system</p>
+                        <h2 class="heading">the box itself</h2>
                     </div>
+                    <p class="section-note">current load across CPU, memory, and disk.</p>
                 </div>
 
-                <div class="usage">
+                <div class="control-stat-grid">
+                    <div class="control-stat-cell">
+                        <span>cpu</span>
+                        <strong>{{ server.cpu }}%</strong>
+                    </div>
+                    <div class="control-stat-cell">
+                        <span>memory</span>
+                        <strong>{{ server.memory }}%</strong>
+                        <small>{{ server.memory_used }} GB / {{ server.memory_total }} GB</small>
+                    </div>
+                    <div class="control-stat-cell">
+                        <span>disk</span>
+                        <strong>{{ server.disk }}%</strong>
+                        <small>{{ server.disk_used }} GB / {{ server.disk_total }} GB</small>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-                    {% if application.running %}
-
+        <section id="applications" class="reveal">
+            <div class="wrap">
+                <div class="section-head">
                     <div>
-                        <span>CPU</span>
-                        <strong>{{ application.cpu }}%</strong>
+                        <p class="eyebrow">// applications</p>
+                        <h2 class="heading">processes on this host</h2>
                     </div>
-
-                    <div>
-                        <span>Memory</span>
-                        <strong>{{ application.memory_mb }} MB</strong>
-                        <small>{{ application.memory }}% of system</small>
-                    </div>
-
-                    {% else %}
-
-                    <div class="stopped">
-                        Application is not running
-                    </div>
-
-                    {% endif %}
-
+                    <p class="section-note">start, stop, or update &amp; restart each service.</p>
                 </div>
 
-                {% if application.running %}
-                <div class="status running">● Running</div>
-                {% else %}
-                <div class="status stopped">● Stopped</div>
-                {% endif %}
+                <div class="svc-table">
+                    {% for key, application in applications.items() %}
+                    <article class="app-row" data-status="{{ 'running' if application.running else 'stopped' }}">
+                        <span class="dot {{ 'online' if application.running else 'offline' }}"></span>
+
+                        <div class="app-name-col">
+                            <p class="app-name">{{ application.name }}</p>
+                            <p class="app-port">port {{ application.port }}</p>
+                        </div>
+
+                        {% if application.running %}
+                        <div class="app-usage">
+                            <span>cpu <strong>{{ application.cpu }}%</strong></span>
+                            <span>mem <strong>{{ application.memory_mb }} MB</strong> ({{ application.memory }}%)</span>
+                            <span class="app-status running">● running</span>
+                        </div>
+                        {% else %}
+                        <div class="app-usage">
+                            <span class="stopped-note">not running</span>
+                            <span class="app-status stopped">● stopped</span>
+                        </div>
+                        {% endif %}
+
+                        <div class="app-actions">
+                            {% if not application.running %}
+                            <form method="POST" action="/control/{{ key }}/start">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                <button class="app-btn-start">start &amp; update</button>
+                            </form>
+                            {% endif %}
+
+                            {% if application.running %}
+                            <form method="POST" action="/control/{{ key }}/stop">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                <button class="app-btn-stop">stop</button>
+                            </form>
+                            {% endif %}
+
+                            <form method="POST" action="/control/{{ key }}/restart">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                <button class="app-btn-restart">update &amp; restart</button>
+                            </form>
+                        </div>
+                    </article>
+                    {% endfor %}
+                </div>
             </div>
-
-            <div class="buttons">
-
-                {% if not application.running %}
-                <form method="POST" action="/control/{{ key }}/start">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                    <button class="start">Start & Update</button>
-                </form>
-                {% endif %}
-
-                {% if application.running %}
-                <form method="POST" action="/control/{{ key }}/stop">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                    <button class="stop">Stop</button>
-                </form>
-                {% endif %}
-
-                <form method="POST" action="/control/{{ key }}/restart">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                    <button class="restart">Update & Restart</button>
-                </form>
-
-            </div>
-
-        </div>
-
-        {% endfor %}
+        </section>
 
     </main>
 
+    <footer>
+        <div class="wrap">
+            <div class="footer-bottom">
+                <span>© 2026 TheOrangeCow. Built with too many tabs open.</span>
+                <span class="moo">// moo</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/script.js"></script>
 </body>
 
 </html>
