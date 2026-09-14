@@ -1,6 +1,4 @@
-import os
-import secrets
-import subprocess
+import os, secrets, subprocess, psutil
 
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, flash, abort
 from flask_session import Session
@@ -338,15 +336,51 @@ APPLICATIONS = {
 }
 
 
-def application_running(port):
+def get_application_stats(port):
     result = subprocess.run(
         ["sudo", "fuser", f"{port}/tcp"],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL
+        capture_output=True,
+        text=True
     )
 
-    return result.returncode == 0
+    if result.returncode != 0:
+        return {
+            "running": False,
+            "cpu": 0,
+            "memory": 0,
+            "memory_mb": 0
+        }
 
+    pids = []
+
+    for part in result.stdout.split():
+        if part.isdigit():
+            pids.append(int(part))
+
+    total_cpu = 0
+    total_memory = 0
+    total_memory_mb = 0
+
+    for pid in pids:
+        try:
+            process = psutil.Process(pid)
+
+            total_cpu += process.cpu_percent(interval=0.1)
+
+            memory = process.memory_info().rss
+
+            total_memory += process.memory_percent()
+            total_memory_mb += memory / (1024 * 1024)
+
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            pass
+
+    return {
+        "running": True,
+        "cpu": round(total_cpu, 1),
+        "memory": round(total_memory, 1),
+        "memory_mb": round(total_memory_mb, 1)
+    }
 
 @app.route("/control")
 @admin_required
@@ -354,14 +388,30 @@ def control():
     applications = {}
 
     for key, application in APPLICATIONS.items():
+        stats = get_application_stats(application["port"])
+
         applications[key] = {
             **application,
-            "running": application_running(application["port"])
+            **stats
         }
+
+    memory = psutil.virtual_memory()
+    disk = psutil.disk_usage("/")
+
+    server = {
+        "cpu": psutil.cpu_percent(interval=0.5),
+        "memory": memory.percent,
+        "memory_used": round(memory.used / (1024 ** 3), 2),
+        "memory_total": round(memory.total / (1024 ** 3), 2),
+        "disk": disk.percent,
+        "disk_used": round(disk.used / (1024 ** 3), 2),
+        "disk_total": round(disk.total / (1024 ** 3), 2)
+    }
 
     return render_template(
         "control.html",
-        applications=applications
+        applications=applications,
+        server=server
     )
 
 

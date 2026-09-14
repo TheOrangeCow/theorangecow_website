@@ -81,6 +81,64 @@
             color: #888;
             font-family: monospace;
         }
+
+        .server-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat {
+            background: #151613;
+            border: 1px solid #292a26;
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .stat span,
+        .usage span {
+            display: block;
+            color: #888;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 28px;
+        }
+
+        .stat small {
+            display: block;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        .usage {
+            display: flex;
+            gap: 40px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #292a26;
+        }
+
+        .usage strong {
+            font-size: 20px;
+        }
+
+        .usage small {
+            display: block;
+            color: #777;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        @media (max-width: 700px) {
+            .server-stats {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 
@@ -89,6 +147,27 @@
     <main>
 
         <h1>Server Control</h1>
+
+        <div class="server-stats">
+
+            <div class="stat">
+                <span>CPU</span>
+                <strong>{{ server.cpu }}%</strong>
+            </div>
+
+            <div class="stat">
+                <span>Memory</span>
+                <strong>{{ server.memory }}%</strong>
+                <small>{{ server.memory_used }} GB / {{ server.memory_total }} GB</small>
+            </div>
+
+            <div class="stat">
+                <span>Disk</span>
+                <strong>{{ server.disk }}%</strong>
+                <small>{{ server.disk_used }} GB / {{ server.disk_total }} GB</small>
+            </div>
+
+        </div>
 
         {% for key, application in applications.items() %}
 
@@ -100,6 +179,31 @@
                     <div class="port">
                         Port {{ application.port }}
                     </div>
+                </div>
+
+                <div class="usage">
+
+                    {% if application.running %}
+
+                    <div>
+                        <span>CPU</span>
+                        <strong>{{ application.cpu }}%</strong>
+                    </div>
+
+                    <div>
+                        <span>Memory</span>
+                        <strong>{{ application.memory_mb }} MB</strong>
+                        <small>{{ application.memory }}% of system</small>
+                    </div>
+
+                    {% else %}
+
+                    <div class="stopped">
+                        Application is not running
+                    </div>
+
+                    {% endif %}
+
                 </div>
 
                 {% if application.running %}
