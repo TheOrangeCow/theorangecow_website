@@ -251,7 +251,7 @@
                     </article>
 
                     <article class="svc-row" data-status="online" data-monitor="fun">
-                        <span class="dot dev"></span>
+                        <span class="dot online"></span>
                         <div class="svc-name-col">
                             <p class="svc-name">cow.fun <span class="svc-status-tag">checking…</span></p>
                             <p class="svc-desc">A small Flask project still under construction - check back soon.</p>
@@ -265,6 +265,25 @@
                             <a href="https://fun.theorangecow.org" target="_blank" rel="noopener" class="primary">visit
                                 ↗</a>
                             <a href="https://github.com/TheOrangeCow/cow.fun" target="_blank" rel="noopener">code
+                                ↗</a>
+                        </div>
+                    </article>
+
+                    <article class="svc-row" data-status="online" data-monitor="post">
+                        <span class="dot online"></span>
+                        <div class="svc-name-col">
+                            <p class="svc-name">post <span class="svc-status-tag">checking…</span></p>
+                            <p class="svc-desc">A small Flask that simulates the sending of letters.</p>
+                        </div>
+                        <div class="svc-meta-col">
+                            <div class="svc-stack"><span>Python</span><span>Flask</span></div>
+                            <div class="svc-live-stats" data-repo="post">★ <span class="stars">…</span>
+                                &nbsp;·&nbsp; updated <span class="updated">…</span></div>
+                        </div>
+                        <div class="svc-actions">
+                            <a href="https://post.theorangecow.org" target="_blank" rel="noopener" class="primary">visit
+                                ↗</a>
+                            <a href="https://github.com/TheOrangeCow/post" target="_blank" rel="noopener">code
                                 ↗</a>
                         </div>
                     </article>
@@ -543,6 +562,7 @@
                     <a href="https://brainwave.theorangecow.org" target="_blank" rel="noopener">brain wave</a>
                     <a href="https://cow-servers.theorangecow.org" target="_blank" rel="noopener">cow servers</a>
                     <a href="https://fun.theorangecow.org" target="_blank" rel="noopener">cow.fun</a>
+                    <a href="https://post.theorangecow.org" target="_blank" rel="noopener">post</a>
                 </div>
                 <div class="footer-col">
                     <p class="footer-col-title">top projects</p>
@@ -579,7 +599,8 @@
                 "library",
                 "cow_servers",
                 "Brain-Wave",
-                "cow.fun"
+                "cow.fun",
+                "post"
             ];
 
             var reducedMotion =
@@ -1388,9 +1409,11 @@
             var MATCHERS = {
                 house: "house",
                 library: "librar",
-                cowfun: "fun",
+                fun: "fun",
                 brainwave: "brainwave",
-                cowservers: "cowserver"
+                cowservers: "cowserver",
+                post: "post"
+
             };
 
             fetch("https://status.theorangecow.org/index.json")
