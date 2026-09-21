@@ -1,4 +1,5 @@
 import os, secrets, subprocess, psutil
+import time, threading, fcntl
 
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, flash, abort
 from flask_session import Session
@@ -309,15 +310,15 @@ def admin_page():
 
 
 APPLICATIONS = {
-    "brainwave": {
-        "name": "Brain Wave",
-        "path": "/var/www/brainwave",
-        "port": 7000
-    },
     "flaskapp": {
         "name": "TheOrangeCow",
         "path": "/var/www/flaskapp",
         "port": 5000
+    },
+    "brainwave": {
+        "name": "Brain Wave",
+        "path": "/var/www/brainwave",
+        "port": 7000
     },
     "fun": {
         "name": "Cow.fun",
@@ -338,8 +339,61 @@ APPLICATIONS = {
         "name": "post",
         "path": "/var/www/post",
         "port": 6500
+    },
+    "codeforge":{
+        "name": "CodeForge",
+        "path": "/var/www/codeforge",
+        "port": 6600
     }
 }
+
+MAIN_APP = "flaskapp"
+AUTO_SHUTDOWN_SECONDS = 30 * 60 
+_last_start_attempt = {}
+
+
+def get_port_pids(port):
+    result = subprocess.run(
+        ["sudo", "fuser", f"{port}/tcp"],
+        capture_output=True, text=True
+    )
+    if result.returncode != 0:
+        return []
+    return [int(p) for p in result.stdout.split() if p.isdigit()]
+
+
+def get_uptime_seconds(pids):
+    started = []
+    for pid in pids:
+        try:
+            started.append(psutil.Process(pid).create_time())
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            pass
+    return time.time() - min(started) if started else 0
+
+
+def auto_shutdown_loop():
+    while True:
+        time.sleep(60)
+        for key, application in APPLICATIONS.items():
+            if key == MAIN_APP:
+                continue
+            pids = get_port_pids(application["port"])
+            if pids and get_uptime_seconds(pids) > AUTO_SHUTDOWN_SECONDS:
+                subprocess.run(["sudo", "fuser", "-k", f"{application['port']}/tcp"])
+
+
+def start_auto_shutdown():
+    lock = open("/tmp/orangecow_autoshutdown.lock", "w")
+    try:
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        return
+    app._autoshutdown_lock = lock
+    threading.Thread(target=auto_shutdown_loop, daemon=True).start()
+
+
+start_auto_shutdown()
 
 
 def get_application_stats(port):
@@ -488,6 +542,54 @@ def control_restart(name):
     flash(f"{application['name']} restarted.", "success")
 
     return redirect(url_for("control"))
+
+@app.route("/server-down")
+def server_down():
+    key = request.args.get("app", "")
+    application = APPLICATIONS.get(key)
+    if not application or key == MAIN_APP:
+        abort(404)
+    return render_template(
+        "server_down.html",
+        key=key,
+        application=application,
+        starting=request.args.get("starting") == "1",
+    )
+
+
+@app.route("/server-down/<name>/start", methods=["POST"])
+def server_down_start(name):
+    application = APPLICATIONS.get(name)
+    if not application or name == MAIN_APP:
+        abort(404)
+
+    if not csrf_ok():
+        flash("That form expired - try again.", "error")
+        return redirect(url_for("server_down", app=name))
+
+    if not current_user():
+        flash("Log in to start the server.", "error")
+        return redirect(url_for("login", next=url_for("server_down", app=name)))
+
+    already_running = bool(get_port_pids(application["port"]))
+    recently_tried = time.time() - _last_start_attempt.get(name, 0) < 60
+
+    if not already_running and not recently_tried:
+        _last_start_attempt[name] = time.time()
+        subprocess.Popen(
+            ["bash", os.path.join(application["path"], "update_app.sh")],
+            cwd=application["path"]
+        )
+
+    return redirect(url_for("server_down", app=name, starting=1))
+
+
+@app.route("/server-down/<name>/status")
+def server_down_status(name):
+    application = APPLICATIONS.get(name)
+    if not application or name == MAIN_APP:
+        abort(404)
+    return jsonify({"running": bool(get_port_pids(application["port"]))})
 
 if __name__ == "__main__":
     app.run(debug=True)
