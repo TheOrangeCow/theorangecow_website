@@ -313,37 +313,44 @@ APPLICATIONS = {
     "flaskapp": {
         "name": "TheOrangeCow",
         "path": "/var/www/flaskapp",
-        "port": 5000
+        "port": 5000,
+        "url": "https://theorangecow.org"
     },
     "brainwave": {
         "name": "Brain Wave",
         "path": "/var/www/brainwave",
-        "port": 7000
+        "port": 7000,
+        "url": "https://brainwave.theorangecow.org"
     },
     "fun": {
         "name": "Cow.fun",
         "path": "/var/www/fun",
-        "port": 6002
+        "port": 6002,
+        "url": "https://fun.theorangecow.org"
     },
     "libary": {
         "name": "Library",
         "path": "/var/www/libary",
-        "port": 6000
+        "port": 6000,
+        "url": "https://library.theorangecow.org"
     },
     "sockets": {
         "name": "Cow Servers",
         "path": "/var/www/sockets",
-        "port": 6001
+        "port": 6001,
+        "url": "https://cowservers.theorangecow.org"
     },
     "post": {
         "name": "post",
         "path": "/var/www/post",
-        "port": 6500
+        "port": 6500,
+        "url": "https://post.theorangecow.org"
     },
     "codeforge":{
         "name": "CodeForge",
         "path": "/var/www/codeforge",
-        "port": 6600
+        "port": 6600,
+        "url": "https://codeforge.theorangecow.org"
     }
 }
 
